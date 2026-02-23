@@ -163,11 +163,17 @@
 
 <header>
   <h1>Boiler Discount Finder</h1>
-  <p>Select a boiler type and output (kW) to find available discounts.</p>
+  <p>Select a brand, boiler type and output (kW) to find available discounts.</p>
 </header>
 
 <main>
   <div class="filters">
+    <div class="filter-group">
+      <label for="brandFilter">Brand</label>
+      <select id="brandFilter">
+        <option value="">All Brands</option>
+      </select>
+    </div>
     <div class="filter-group">
       <label for="typeFilter">Boiler Type</label>
       <select id="typeFilter">
@@ -191,161 +197,182 @@
 </main>
 
 <script>
-// Boiler data: { model, code, type, power (kW), discount (pence) }
+// Boiler data: { brand, model, code, type, power (kW), discount (pence) }
 const BOILERS = [
   // Glowworm Energy7
-  { model: "Glowworm Energy7 12r Regular",            code: "CBLR3375", type: "Regular", power: 12,  discount: 100  },
-  { model: "Glowworm Energy7 15r Regular",            code: "CBLR3376", type: "Regular", power: 15,  discount: 50   },
-  { model: "Glowworm Energy7 18r Regular",            code: "CBLR3377", type: "Regular", power: 18,  discount: 100  },
-  { model: "Glowworm Energy7 18s System ErP",         code: "CBLR3380", type: "System",  power: 18,  discount: 50   },
-  { model: "Glowworm Energy7 25c ErP",                code: "CBLR3382", type: "Combi",   power: 25,  discount: 50   },
-  { model: "Glowworm Energy7 25r Regular",            code: "CBLR3378", type: "Regular", power: 25,  discount: 100  },
-  { model: "Glowworm Energy7 25s System ErP",         code: "CBLR3381", type: "System",  power: 25,  discount: 50   },
-  { model: "Glowworm Energy7 30c ErP",                code: "CBLR3383", type: "Combi",   power: 30,  discount: 50   },
-  { model: "Glowworm Energy7 30r Regular",            code: "CBLR3379", type: "Regular", power: 30,  discount: 100  },
-  { model: "Glowworm Energy7 35c ErP",                code: "CBLR3384", type: "Combi",   power: 35,  discount: 150  },
+  { brand: "Glowworm",       model: "Glowworm Energy7 12r Regular",            code: "CBLR3375", type: "Regular", power: 12,  discount: 100  },
+  { brand: "Glowworm",       model: "Glowworm Energy7 15r Regular",            code: "CBLR3376", type: "Regular", power: 15,  discount: 50   },
+  { brand: "Glowworm",       model: "Glowworm Energy7 18r Regular",            code: "CBLR3377", type: "Regular", power: 18,  discount: 100  },
+  { brand: "Glowworm",       model: "Glowworm Energy7 18s System ErP",         code: "CBLR3380", type: "System",  power: 18,  discount: 50   },
+  { brand: "Glowworm",       model: "Glowworm Energy7 25c ErP",                code: "CBLR3382", type: "Combi",   power: 25,  discount: 50   },
+  { brand: "Glowworm",       model: "Glowworm Energy7 25r Regular",            code: "CBLR3378", type: "Regular", power: 25,  discount: 100  },
+  { brand: "Glowworm",       model: "Glowworm Energy7 25s System ErP",         code: "CBLR3381", type: "System",  power: 25,  discount: 50   },
+  { brand: "Glowworm",       model: "Glowworm Energy7 30c ErP",                code: "CBLR3383", type: "Combi",   power: 30,  discount: 50   },
+  { brand: "Glowworm",       model: "Glowworm Energy7 30r Regular",            code: "CBLR3379", type: "Regular", power: 30,  discount: 100  },
+  { brand: "Glowworm",       model: "Glowworm Energy7 35c ErP",                code: "CBLR3384", type: "Combi",   power: 35,  discount: 150  },
 
   // Worcester Bosch Greenstar 8000 F
-  { model: "Worcester Bosch Greenstar 8000 F 35kW Combi NG", code: "CBLR3592", type: "Combi",   power: 35,  discount: 50  },
-  { model: "Worcester Bosch Greenstar 8000 F 50kW Combi NG", code: "CBLR3593", type: "Combi",   power: 50,  discount: 50  },
+  { brand: "Worcester Bosch", model: "Worcester Bosch Greenstar 8000 F 35kW Combi NG", code: "CBLR3592", type: "Combi",   power: 35,  discount: 50  },
+  { brand: "Worcester Bosch", model: "Worcester Bosch Greenstar 8000 F 50kW Combi NG", code: "CBLR3593", type: "Combi",   power: 50,  discount: 50  },
 
   // Worcester Greenstar 4000 (standalone combi entry)
-  { model: "Greenstar 4000 30kW Combi NG",            code: "CBLR3602", type: "Combi",   power: 30,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Greenstar 4000 30kW Combi NG",            code: "CBLR3602", type: "Combi",   power: 30,  discount: 100  },
 
   // Ideal Logic Combi2
-  { model: "IDEAL LOGIC COMBI2 C24 BOILER",           code: "CBLR1912", type: "Combi",   power: 24,  discount: 300  },
-  { model: "IDEAL LOGIC COMBI2 C30 BOILER",           code: "CBLR1913", type: "Combi",   power: 30,  discount: 300  },
-  { model: "IDEAL LOGIC COMBI2 C35 BOILER",           code: "CBLR1914", type: "Combi",   power: 35,  discount: 300  },
+  { brand: "Ideal",          model: "IDEAL LOGIC COMBI2 C24 BOILER",           code: "CBLR1912", type: "Combi",   power: 24,  discount: 300  },
+  { brand: "Ideal",          model: "IDEAL LOGIC COMBI2 C30 BOILER",           code: "CBLR1913", type: "Combi",   power: 30,  discount: 300  },
+  { brand: "Ideal",          model: "IDEAL LOGIC COMBI2 C35 BOILER",           code: "CBLR1914", type: "Combi",   power: 35,  discount: 300  },
 
   // Ideal Logic Heat2 (Regular / heat only)
-  { model: "IDEAL LOGIC HEAT2 H12 BOILER",            code: "CBLR1919", type: "Regular", power: 12,  discount: 200  },
-  { model: "IDEAL LOGIC HEAT2 H15 BOILER",            code: "CBLR1920", type: "Regular", power: 15,  discount: 200  },
-  { model: "IDEAL LOGIC HEAT2 H18 BOILER",            code: "CBLR1921", type: "Regular", power: 18,  discount: 150  },
-  { model: "IDEAL LOGIC HEAT2 H24 BOILER",            code: "CBLR1922", type: "Regular", power: 24,  discount: 300  },
-  { model: "IDEAL LOGIC HEAT2 H30 BOILER",            code: "CBLR1923", type: "Regular", power: 30,  discount: 300  },
+  { brand: "Ideal",          model: "IDEAL LOGIC HEAT2 H12 BOILER",            code: "CBLR1919", type: "Regular", power: 12,  discount: 200  },
+  { brand: "Ideal",          model: "IDEAL LOGIC HEAT2 H15 BOILER",            code: "CBLR1920", type: "Regular", power: 15,  discount: 200  },
+  { brand: "Ideal",          model: "IDEAL LOGIC HEAT2 H18 BOILER",            code: "CBLR1921", type: "Regular", power: 18,  discount: 150  },
+  { brand: "Ideal",          model: "IDEAL LOGIC HEAT2 H24 BOILER",            code: "CBLR1922", type: "Regular", power: 24,  discount: 300  },
+  { brand: "Ideal",          model: "IDEAL LOGIC HEAT2 H30 BOILER",            code: "CBLR1923", type: "Regular", power: 30,  discount: 300  },
 
   // Ideal Logic System
-  { model: "Ideal Logic System Boiler 24kW",          code: "CBLR1917", type: "System",  power: 24,  discount: 100  },
+  { brand: "Ideal",          model: "Ideal Logic System Boiler 24kW",          code: "CBLR1917", type: "System",  power: 24,  discount: 100  },
 
   // Ideal Logic System2
   // Note: CBLR1917 appears twice in the source data (above entry and S24 below) — retained as supplied.
-  { model: "IDEAL LOGIC SYSTEM2 S15 BOILER",          code: "CBLR1915", type: "System",  power: 15,  discount: 50   },
-  { model: "IDEAL LOGIC SYSTEM2 S18 BOILER",          code: "CBLR1916", type: "System",  power: 18,  discount: 50   },
-  { model: "IDEAL LOGIC SYSTEM2 S24 BOILER",          code: "CBLR1917", type: "System",  power: 24,  discount: 50   },
-  { model: "IDEAL LOGIC SYSTEM2 S30 BOILER",          code: "CBLR1918", type: "System",  power: 30,  discount: 300  },
+  { brand: "Ideal",          model: "IDEAL LOGIC SYSTEM2 S15 BOILER",          code: "CBLR1915", type: "System",  power: 15,  discount: 50   },
+  { brand: "Ideal",          model: "IDEAL LOGIC SYSTEM2 S18 BOILER",          code: "CBLR1916", type: "System",  power: 18,  discount: 50   },
+  { brand: "Ideal",          model: "IDEAL LOGIC SYSTEM2 S24 BOILER",          code: "CBLR1917", type: "System",  power: 24,  discount: 50   },
+  { brand: "Ideal",          model: "IDEAL LOGIC SYSTEM2 S30 BOILER",          code: "CBLR1918", type: "System",  power: 30,  discount: 300  },
 
   // Keston
-  { model: "Keston System 2 S30 System Boiler",       code: "CBLR3002", type: "System",  power: 30,  discount: 100  },
+  { brand: "Keston",         model: "Keston System 2 S30 System Boiler",       code: "CBLR3002", type: "System",  power: 30,  discount: 100  },
 
   // Vaillant ecoFIT pure — 4xx = Regular, 6xx = System, 8xx = Combi; last 2 digits = kW
-  { model: "Vaillant ecoFIT pure 412",                code: "CBLR3423", type: "Regular", power: 12,  discount: 100  },
-  { model: "Vaillant ecoFIT pure 415",                code: "CBLR3424", type: "Regular", power: 15,  discount: 300  },
-  { model: "Vaillant ecoFIT pure 418",                code: "CBLR3425", type: "Regular", power: 18,  discount: 300  },
-  { model: "Vaillant ecoFIT pure 425",                code: "CBLR3426", type: "Regular", power: 25,  discount: 200  },
-  { model: "Vaillant ecoFIT pure 430",                code: "CBLR3427", type: "Regular", power: 30,  discount: 300  },
-  { model: "Vaillant ecoFIT pure 435",                code: "CBLR3428", type: "Regular", power: 35,  discount: 300  },
-  { model: "Vaillant ecoFIT pure 612",                code: "CBLR3429", type: "System",  power: 12,  discount: 100  },
-  { model: "Vaillant ecoFIT pure 615",                code: "CBLR3430", type: "System",  power: 15,  discount: 100  },
-  { model: "Vaillant ecoFIT pure 618",                code: "CBLR3431", type: "System",  power: 18,  discount: 50   },
-  { model: "Vaillant ecoFIT pure 625",                code: "CBLR3432", type: "System",  power: 25,  discount: 50   },
-  { model: "Vaillant ecoFIT pure 630",                code: "CBLR3433", type: "System",  power: 30,  discount: 150  },
-  { model: "Vaillant ecoFIT pure 825",                code: "CBLR3420", type: "Combi",   power: 25,  discount: 50   },
-  { model: "Vaillant ecoFIT pure 830",                code: "CBLR3421", type: "Combi",   power: 30,  discount: 100  },
-  { model: "Vaillant ecoFIT pure 835",                code: "CBLR3422", type: "Combi",   power: 35,  discount: 300  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 412",                code: "CBLR3423", type: "Regular", power: 12,  discount: 100  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 415",                code: "CBLR3424", type: "Regular", power: 15,  discount: 300  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 418",                code: "CBLR3425", type: "Regular", power: 18,  discount: 300  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 425",                code: "CBLR3426", type: "Regular", power: 25,  discount: 200  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 430",                code: "CBLR3427", type: "Regular", power: 30,  discount: 300  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 435",                code: "CBLR3428", type: "Regular", power: 35,  discount: 300  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 612",                code: "CBLR3429", type: "System",  power: 12,  discount: 100  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 615",                code: "CBLR3430", type: "System",  power: 15,  discount: 100  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 618",                code: "CBLR3431", type: "System",  power: 18,  discount: 50   },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 625",                code: "CBLR3432", type: "System",  power: 25,  discount: 50   },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 630",                code: "CBLR3433", type: "System",  power: 30,  discount: 150  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 825",                code: "CBLR3420", type: "Combi",   power: 25,  discount: 50   },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 830",                code: "CBLR3421", type: "Combi",   power: 30,  discount: 100  },
+  { brand: "Vaillant",       model: "Vaillant ecoFIT pure 835",                code: "CBLR3422", type: "Combi",   power: 35,  discount: 300  },
 
   // Vaillant ecoTEC plus — 4xx = Regular; last 2 digits = kW
-  { model: "Vaillant ecoTEC plus 412 MkII",           code: "CBLR3390", type: "Regular", power: 12,  discount: 100  },
-  { model: "Vaillant ecoTEC plus 415 MkII",           code: "CBLR3391", type: "Regular", power: 15,  discount: 100  },
-  { model: "Vaillant ecoTEC plus 418 MkII",           code: "CBLR3392", type: "Regular", power: 18,  discount: 150  },
-  { model: "Vaillant ecoTEC plus 424 MkII",           code: "CBLR3393", type: "Regular", power: 24,  discount: 200  },
-  { model: "Vaillant ecoTEC plus 430 MkII",           code: "CBLR3394", type: "Regular", power: 30,  discount: 300  },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC plus 412 MkII",           code: "CBLR3390", type: "Regular", power: 12,  discount: 100  },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC plus 415 MkII",           code: "CBLR3391", type: "Regular", power: 15,  discount: 100  },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC plus 418 MkII",           code: "CBLR3392", type: "Regular", power: 18,  discount: 150  },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC plus 424 MkII",           code: "CBLR3393", type: "Regular", power: 24,  discount: 200  },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC plus 430 MkII",           code: "CBLR3394", type: "Regular", power: 30,  discount: 300  },
 
   // Vaillant ecoTEC pro (Combi)
-  { model: "Vaillant ecoTEC pro 24",                  code: "CBLR3439", type: "Combi",   power: 24,  discount: 50   },
-  { model: "Vaillant ecoTEC pro 28",                  code: "CBLR3440", type: "Combi",   power: 28,  discount: 50   },
-  { model: "Vaillant ecoTEC pro 30 ErP",              code: "CBLR3385", type: "Combi",   power: 30,  discount: 50   },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC pro 24",                  code: "CBLR3439", type: "Combi",   power: 24,  discount: 50   },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC pro 28",                  code: "CBLR3440", type: "Combi",   power: 28,  discount: 50   },
+  { brand: "Vaillant",       model: "Vaillant ecoTEC pro 30 ErP",              code: "CBLR3385", type: "Combi",   power: 30,  discount: 50   },
 
   // Viessmann Vitodens
-  { model: "Viessmann Vitodens 050-W 25kW System Boiler B0HA", code: "CBLR6514", type: "System",  power: 25,  discount: 50   },
-  { model: "Viessmann Vitodens 050-W 30kW Combi B0KA",         code: "CBLR6511", type: "Combi",   power: 30,  discount: 50   },
-  { model: "Viessmann Vitodens 050-W 35kW Combi B0KA",         code: "CBLR6512", type: "Combi",   power: 35,  discount: 50   },
-  { model: "Viessmann Vitodens 100-W 19kW Heat Only B1GA",     code: "CBLR6520", type: "Regular", power: 19,  discount: 200  },
-  { model: "Viessmann Vitodens 100-W 25kW Heat Only B1GA",     code: "CBLR6521", type: "Regular", power: 25,  discount: 300  },
-  { model: "Viessmann Vitodens 100-W 30kW Combi Boiler B1KF",  code: "CBLR6516", type: "Combi",   power: 30,  discount: 150  },
-  { model: "Viessmann Vitodens 100-W 32kW Heat Only B1GA",     code: "CBLR6522", type: "Regular", power: 32,  discount: 100  },
-  { model: "Viessmann Vitodens 100-W 32kW System Boiler B1HF", code: "CBLR6526", type: "System",  power: 32,  discount: 150  },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 050-W 25kW System Boiler B0HA", code: "CBLR6514", type: "System",  power: 25,  discount: 50   },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 050-W 30kW Combi B0KA",         code: "CBLR6511", type: "Combi",   power: 30,  discount: 50   },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 050-W 35kW Combi B0KA",         code: "CBLR6512", type: "Combi",   power: 35,  discount: 50   },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 100-W 19kW Heat Only B1GA",     code: "CBLR6520", type: "Regular", power: 19,  discount: 200  },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 100-W 25kW Heat Only B1GA",     code: "CBLR6521", type: "Regular", power: 25,  discount: 300  },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 100-W 30kW Combi Boiler B1KF",  code: "CBLR6516", type: "Combi",   power: 30,  discount: 150  },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 100-W 32kW Heat Only B1GA",     code: "CBLR6522", type: "Regular", power: 32,  discount: 100  },
+  { brand: "Viessmann",      model: "Viessmann Vitodens 100-W 32kW System Boiler B1HF", code: "CBLR6526", type: "System",  power: 32,  discount: 150  },
 
   // Worcester Greenstar (various)
-  { model: "Worcester Greenstar 25Si Compact ErP",    code: "CBLR1366", type: "System",  power: 25,  discount: 50   },
-  { model: "Worcester Greenstar 28CDi Compact",       code: "CBLR3459", type: "Combi",   power: 28,  discount: 50   },
-  { model: "Worcester Greenstar 30Ri ErP",            code: "CBLR1380", type: "Regular", power: 30,  discount: 150  },
-  { model: "Worcester Greenstar 30Ri ErP LPG",        code: "CBLR1381", type: "Regular", power: 30,  discount: 100  },
-  { model: "Worcester Greenstar 32CDi Compact",       code: "CBLR3446", type: "Combi",   power: 32,  discount: 100  },
-  { model: "Worcester Greenstar 32CDi Compact ErP LPG", code: "CBLR1370", type: "Combi", power: 32,  discount: 50   },
-  { model: "Worcester Greenstar 36CDi Compact",       code: "CBLR3447", type: "Combi",   power: 36,  discount: 100  },
-  { model: "Worcester Greenstar 4000 15kW System NG", code: "CBLR3606", type: "System",  power: 15,  discount: 50   },
-  { model: "Worcester Greenstar 4000 18kW System NG", code: "CBLR3608", type: "System",  power: 18,  discount: 50   },
-  { model: "Worcester Greenstar 4000 21kW System NG", code: "CBLR3610", type: "System",  power: 21,  discount: 50   },
-  { model: "Worcester Greenstar 4000 24kW System LPG",code: "CBLR3613", type: "System",  power: 24,  discount: 50   },
-  { model: "Worcester Greenstar 4000 24kW System NG", code: "CBLR3612", type: "System",  power: 24,  discount: 50   },
-  { model: "Worcester Greenstar 4000 25kW Combi LPG", code: "CBLR3601", type: "Combi",   power: 25,  discount: 50   },
-  { model: "Worcester Greenstar 4000 25kW Combi NG",  code: "CBLR3600", type: "Combi",   power: 25,  discount: 50   },
-  { model: "Worcester Greenstar 4000 30kW Combi LPG", code: "CBLR3603", type: "Combi",   power: 30,  discount: 50   },
-  { model: "Worcester Greenstar 8000 Life 30kW Regular", code: "",      type: "Regular", power: 30,  discount: 50   },
-  { model: "Worcester Greenstar 8000 Life 40kW Combi",   code: "CBLR3530", type: "Combi",   power: 40,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 30kW Regular NG",  code: "CBLR3574", type: "Regular", power: 30,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 30kW System LPG",  code: "CBLR3579", type: "System",  power: 30,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 30kW System NG",   code: "CBLR3572", type: "System",  power: 30,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 32kW Combi LPG",   code: "CBLR3567", type: "Combi",   power: 32,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 35kW Regular LPG", code: "CBLR3582", type: "Regular", power: 35,  discount: 100  },
-  { model: "Worcester Greenstar 8000+ 35kW Regular NG",  code: "CBLR3575", type: "Regular", power: 35,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 35kW System NG",   code: "CBLR3573", type: "System",  power: 35,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 36kW Combi LPG",   code: "CBLR3568", type: "Combi",   power: 36,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 36kW Combi NG",    code: "CBLR3561", type: "Combi",   power: 36,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 40kW Combi LPG",   code: "CBLR3569", type: "Combi",   power: 40,  discount: 100  },
-  { model: "Worcester Greenstar 8000+ 40kW Combi NG",    code: "CBLR3562", type: "Combi",   power: 40,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 40kW Regular NG",  code: "CBLR3576", type: "Regular", power: 40,  discount: 100  },
-  { model: "Worcester Greenstar 8000+ 45kW Combi NG",    code: "CBLR3563", type: "Combi",   power: 45,  discount: 100  },
-  { model: "Worcester Greenstar 8000+ 45kW Regular NG",  code: "CBLR3577", type: "Regular", power: 45,  discount: 50   },
-  { model: "Worcester Greenstar 8000+ 50kW Regular NG",  code: "CBLR3578", type: "Regular", power: 50,  discount: 300  },
-  { model: "Worcester Greenstar 8000+ Style 32kW Combi NG", code: "CBLR3565", type: "Combi", power: 32, discount: 50  },
-  { model: "Worcester Greenstar 8000+ Style 36kW Combi NG", code: "CBLR3566", type: "Combi", power: 36, discount: 50  },
-  { model: "Worcester Greenstar FS 30CDi ErP",           code: "CBLR1388", type: "Combi",   power: 30,  discount: 50   },
-  { model: "Worcester Greenstar Ri 12kW MK11",           code: "CBLR3453", type: "Regular", power: 12,  discount: 50   },
-  { model: "Worcester Greenstar Ri 15kW LPG MK11",       code: "CBLR3456", type: "Regular", power: 15,  discount: 50   },
-  { model: "Worcester Greenstar Ri 15kW MK11",           code: "CBLR3455", type: "Regular", power: 15,  discount: 50   },
-  { model: "Worcester Greenstar Ri 18kW LPG MK11",       code: "CBLR3458", type: "Regular", power: 18,  discount: 100  },
-  { model: "Worcester Greenstar Ri 18kW MK11",           code: "CBLR3457", type: "Regular", power: 18,  discount: 50   },
-  { model: "Worcester Greenstar Ri 24kW LPG MK11",       code: "CBLR3462", type: "Regular", power: 24,  discount: 100  },
-  { model: "Worcester Greenstar Ri 24kW MK11",           code: "CBLR3461", type: "Regular", power: 24,  discount: 200  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 25Si Compact ErP",    code: "CBLR1366", type: "System",  power: 25,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 28CDi Compact",       code: "CBLR3459", type: "Combi",   power: 28,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 30Ri ErP",            code: "CBLR1380", type: "Regular", power: 30,  discount: 150  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 30Ri ErP LPG",        code: "CBLR1381", type: "Regular", power: 30,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 32CDi Compact",       code: "CBLR3446", type: "Combi",   power: 32,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 32CDi Compact ErP LPG", code: "CBLR1370", type: "Combi", power: 32,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 36CDi Compact",       code: "CBLR3447", type: "Combi",   power: 36,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 15kW System NG", code: "CBLR3606", type: "System",  power: 15,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 18kW System NG", code: "CBLR3608", type: "System",  power: 18,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 21kW System NG", code: "CBLR3610", type: "System",  power: 21,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 24kW System LPG",code: "CBLR3613", type: "System",  power: 24,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 24kW System NG", code: "CBLR3612", type: "System",  power: 24,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 25kW Combi LPG", code: "CBLR3601", type: "Combi",   power: 25,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 25kW Combi NG",  code: "CBLR3600", type: "Combi",   power: 25,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 4000 30kW Combi LPG", code: "CBLR3603", type: "Combi",   power: 30,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000 Life 30kW Regular", code: "",      type: "Regular", power: 30,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000 Life 40kW Combi",   code: "CBLR3530", type: "Combi",   power: 40,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 30kW Regular NG",  code: "CBLR3574", type: "Regular", power: 30,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 30kW System LPG",  code: "CBLR3579", type: "System",  power: 30,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 30kW System NG",   code: "CBLR3572", type: "System",  power: 30,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 32kW Combi LPG",   code: "CBLR3567", type: "Combi",   power: 32,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 35kW Regular LPG", code: "CBLR3582", type: "Regular", power: 35,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 35kW Regular NG",  code: "CBLR3575", type: "Regular", power: 35,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 35kW System NG",   code: "CBLR3573", type: "System",  power: 35,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 36kW Combi LPG",   code: "CBLR3568", type: "Combi",   power: 36,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 36kW Combi NG",    code: "CBLR3561", type: "Combi",   power: 36,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 40kW Combi LPG",   code: "CBLR3569", type: "Combi",   power: 40,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 40kW Combi NG",    code: "CBLR3562", type: "Combi",   power: 40,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 40kW Regular NG",  code: "CBLR3576", type: "Regular", power: 40,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 45kW Combi NG",    code: "CBLR3563", type: "Combi",   power: 45,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 45kW Regular NG",  code: "CBLR3577", type: "Regular", power: 45,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ 50kW Regular NG",  code: "CBLR3578", type: "Regular", power: 50,  discount: 300  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ Style 32kW Combi NG", code: "CBLR3565", type: "Combi", power: 32, discount: 50  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar 8000+ Style 36kW Combi NG", code: "CBLR3566", type: "Combi", power: 36, discount: 50  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar FS 30CDi ErP",           code: "CBLR1388", type: "Combi",   power: 30,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar Ri 12kW MK11",           code: "CBLR3453", type: "Regular", power: 12,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar Ri 15kW LPG MK11",       code: "CBLR3456", type: "Regular", power: 15,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar Ri 15kW MK11",           code: "CBLR3455", type: "Regular", power: 15,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar Ri 18kW LPG MK11",       code: "CBLR3458", type: "Regular", power: 18,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar Ri 18kW MK11",           code: "CBLR3457", type: "Regular", power: 18,  discount: 50   },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar Ri 24kW LPG MK11",       code: "CBLR3462", type: "Regular", power: 24,  discount: 100  },
+  { brand: "Worcester Bosch", model: "Worcester Greenstar Ri 24kW MK11",           code: "CBLR3461", type: "Regular", power: 24,  discount: 200  },
 ];
 
 function formatDiscount(pounds) {
   return '£' + pounds.toFixed(2);
 }
 
-function getFilteredBoilers(type, power) {
+function getFilteredBoilers(brand, type, power) {
   return BOILERS.filter(b => {
+    if (brand && b.brand !== brand) return false;
     if (type && b.type !== type) return false;
     if (power && b.power !== Number(power)) return false;
     return true;
   });
 }
 
-function getAvailablePowers(type) {
-  const filtered = type ? BOILERS.filter(b => b.type === type) : BOILERS;
+function getAvailableBrands() {
+  const brands = [...new Set(BOILERS.map(b => b.brand))].sort();
+  return brands;
+}
+
+function getAvailablePowers(brand, type) {
+  let filtered = BOILERS;
+  if (brand) filtered = filtered.filter(b => b.brand === brand);
+  if (type)  filtered = filtered.filter(b => b.type  === type);
   const powers = [...new Set(filtered.map(b => b.power))].sort((a, b) => a - b);
   return powers;
 }
 
 function render() {
+  const brand = document.getElementById('brandFilter').value;
   const type  = document.getElementById('typeFilter').value;
   const power = document.getElementById('powerFilter').value;
 
-  // Update power options based on selected type
+  // Populate brand dropdown on first render
+  const brandSelect = document.getElementById('brandFilter');
+  if (brandSelect.options.length === 1) {
+    getAvailableBrands().forEach(br => {
+      const opt = document.createElement('option');
+      opt.value = br;
+      opt.textContent = br;
+      brandSelect.appendChild(opt);
+    });
+    brandSelect.value = brand;
+  }
+
+  // Update power options based on selected brand and type
   const powerSelect = document.getElementById('powerFilter');
   const currentPower = powerSelect.value;
-  const availablePowers = getAvailablePowers(type);
+  const availablePowers = getAvailablePowers(brand, type);
 
   powerSelect.innerHTML = '<option value="">All Outputs</option>';
   availablePowers.forEach(p => {
@@ -359,10 +386,11 @@ function render() {
   // Re-read power after options refresh
   const selectedPower = powerSelect.value;
 
-  const results = getFilteredBoilers(type, selectedPower);
+  const results = getFilteredBoilers(brand, type, selectedPower);
 
   document.getElementById('resultsInfo').innerHTML =
     `Showing <strong>${results.length}</strong> boiler${results.length !== 1 ? 's' : ''}` +
+    (brand ? ` &ndash; <strong>${brand}</strong>` : '') +
     (type  ? ` &ndash; <strong>${type}</strong>` : '') +
     (selectedPower ? ` &ndash; <strong>${selectedPower} kW</strong>` : '');
 
@@ -397,6 +425,7 @@ function render() {
     </table>`;
 }
 
+document.getElementById('brandFilter').addEventListener('change', render);
 document.getElementById('typeFilter').addEventListener('change', render);
 document.getElementById('powerFilter').addEventListener('change', render);
 
