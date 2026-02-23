@@ -764,7 +764,7 @@ function calcRealEfficiency() {
   document.getElementById('sedbukVal').textContent = sedbuk + '%';
   document.getElementById('ageVal').textContent    = age + ' yr' + (age !== 1 ? 's' : '');
 
-  // age decay: ~0.4 % per year, floor at 80 % of rated
+  // age decay: 0.004 = 0.4% annual efficiency loss, floor at 80% of rated SEDBUK
   const ageFactor   = Math.max(0.80, 1 - age * 0.004);
   const flowFactor  = flowTemp === 'condensing' ? 1.00 : flowTemp === 'partial' ? 0.95 : 0.88;
   const scaleFactor = scale === 'none' ? 1.00 : scale === 'light' ? 0.97 : 0.93;
