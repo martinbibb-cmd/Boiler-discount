@@ -245,6 +245,146 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
+
+    /* ── Current Boiler Block ───────────────────────── */
+    .current-boiler-block {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1a4a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+    }
+
+    .cbb-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .cbb-inputs .filter-group {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .range-row input[type="range"] {
+      flex: 1;
+      accent-color: #1a4a8a;
+      cursor: pointer;
+    }
+
+    .range-val {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #1a4a8a;
+      min-width: 38px;
+      text-align: right;
+    }
+
+    .efficiency-result {
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: #f0f4f8;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .eff-label { font-size: 0.9rem; color: #555; }
+
+    .eff-value { font-size: 1.4rem; font-weight: 700; }
+    .eff-good  { color: #047857; }
+    .eff-warn  { color: #b45309; }
+    .eff-bad   { color: #b91c1c; }
+
+    .eff-note {
+      font-size: 0.78rem;
+      color: #777;
+      flex-basis: 100%;
+      margin-top: 2px;
+    }
+
+    /* ── Pressure Display ───────────────────────────── */
+    .pressure-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+    }
+
+    .pressure-inputs .filter-group input[type="number"] {
+      padding: 9px 12px;
+      border: 1px solid #ccd6e0;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #f9fbfd;
+      color: #222;
+      width: 100%;
+    }
+
+    .pressure-inputs .filter-group input[type="number"]:focus {
+      outline: 2px solid #1a4a8a;
+      outline-offset: 1px;
+    }
+
+    .pressure-result {
+      flex: 2;
+      min-width: 240px;
+      padding-bottom: 4px;
+    }
+
+    .pdrop-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pdrop-arrow  { font-size: 0.95rem; font-weight: 600; color: #333; }
+
+    .pdrop-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .pdrop-good    { background: #d1fae5; color: #065f46; }
+    .pdrop-ok      { background: #dbeafe; color: #1e40af; }
+    .pdrop-warn    { background: #fef3c7; color: #92400e; }
+    .pdrop-bad     { background: #fee2e2; color: #991b1b; }
+    .pdrop-invalid { font-size: 0.85rem; color: #991b1b; }
+
+    /* ── Architecture info strip ────────────────────── */
+    .arch-info {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #f0f6ff;
+      border-radius: 6px;
+      border-left: 3px solid #1a4a8a;
+      font-size: 0.82rem;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .arch-info strong { color: #1a4a8a; }
   </style>
 </head>
 <body>
@@ -271,6 +411,50 @@
 </div>
 
 <main>
+
+  <!-- ── Current Boiler Efficiency Block ────────────── -->
+  <div class="current-boiler-block">
+    <p class="section-title">Current Boiler — Real Operating Efficiency</p>
+    <div class="cbb-inputs">
+      <div class="filter-group">
+        <label for="sedbukInput">SEDBUK Rating (%)</label>
+        <div class="range-row">
+          <input type="range" id="sedbukInput" min="70" max="96" value="84" step="1">
+          <span class="range-val" id="sedbukVal">84%</span>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label for="ageInput">Boiler Age (years)</label>
+        <div class="range-row">
+          <input type="range" id="ageInput" min="0" max="20" value="10" step="1">
+          <span class="range-val" id="ageVal">10 yrs</span>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label for="flowTempInput">Flow Temperature</label>
+        <select id="flowTempInput">
+          <option value="condensing">≤55 °C — fully condensing</option>
+          <option value="partial" selected>60–70 °C — partial condensing</option>
+          <option value="none">≥75 °C — not condensing</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="scaleInput">Scale / Magnetite</label>
+        <select id="scaleInput">
+          <option value="none">None</option>
+          <option value="light">Light</option>
+          <option value="heavy">Heavy</option>
+        </select>
+      </div>
+    </div>
+    <div class="efficiency-result">
+      <span class="eff-label">Estimated real operating efficiency:</span>
+      <span class="eff-value eff-warn" id="realEff">—</span>
+      <span class="eff-note" id="effNote"></span>
+    </div>
+  </div>
+
+  <!-- ── Discount Finder Filters ───────────────────── -->
   <div class="filters">
     <div class="filter-group">
       <label for="brandFilter">Brand</label>
@@ -279,12 +463,12 @@
       </select>
     </div>
     <div class="filter-group">
-      <label for="typeFilter">Boiler Type</label>
+      <label for="typeFilter">System Type</label>
       <select id="typeFilter">
         <option value="">All Types</option>
-        <option value="Combi">Combi</option>
-        <option value="System">System</option>
-        <option value="Regular">Regular</option>
+        <option value="Combi">Combi — On-Demand DHW (Sealed)</option>
+        <option value="System">System — Stored Cylinder (Sealed)</option>
+        <option value="Regular">Regular — Open Vented + Cylinder</option>
       </select>
     </div>
     <div class="filter-group">
@@ -292,6 +476,25 @@
       <select id="powerFilter">
         <option value="">All Outputs</option>
       </select>
+    </div>
+  </div>
+
+  <!-- ── Architecture Info Strip ───────────────────── -->
+  <div class="arch-info" id="archInfo" style="display:none;margin-bottom:16px;"></div>
+
+  <!-- ── Pressure Monitor ──────────────────────────── -->
+  <div class="current-boiler-block" style="margin-bottom:24px;">
+    <p class="section-title">Supply Pressure Monitor</p>
+    <div class="pressure-inputs">
+      <div class="filter-group" style="max-width:180px;">
+        <label for="staticPressure">Static Pressure (bar)</label>
+        <input type="number" id="staticPressure" step="0.1" min="0" max="6" placeholder="e.g. 3.2">
+      </div>
+      <div class="filter-group" style="max-width:180px;">
+        <label for="dynamicPressure">Dynamic Pressure (bar)</label>
+        <input type="number" id="dynamicPressure" step="0.1" min="0" max="6" placeholder="e.g. 2.0">
+      </div>
+      <div class="pressure-result" id="pressureResult"></div>
     </div>
   </div>
 
@@ -533,6 +736,88 @@ document.getElementById('brandFilter').addEventListener('change', render);
 document.getElementById('typeFilter').addEventListener('change', render);
 document.getElementById('powerFilter').addEventListener('change', render);
 
+// ── Architecture info strip ────────────────────────────────────────────────
+const ARCH_INFO = {
+  Combi:   '<strong>Heat Source:</strong> Gas Boiler &nbsp;|&nbsp; <strong>Heating:</strong> Sealed System &nbsp;|&nbsp; <strong>Hot Water:</strong> On Demand',
+  System:  '<strong>Heat Source:</strong> Gas Boiler &nbsp;|&nbsp; <strong>Heating:</strong> Sealed System &nbsp;|&nbsp; <strong>Hot Water:</strong> Stored Cylinder (Unvented)',
+  Regular: '<strong>Heat Source:</strong> Gas Boiler &nbsp;|&nbsp; <strong>Heating:</strong> Open Vented &nbsp;|&nbsp; <strong>Hot Water:</strong> Stored Cylinder (Vented)',
+};
+
+document.getElementById('typeFilter').addEventListener('change', function () {
+  const archEl = document.getElementById('archInfo');
+  const type = this.value;
+  if (type && ARCH_INFO[type]) {
+    archEl.innerHTML = ARCH_INFO[type];
+    archEl.style.display = 'block';
+  } else {
+    archEl.style.display = 'none';
+  }
+});
+
+// ── Current Boiler Efficiency Calculator ──────────────────────────────────
+function calcRealEfficiency() {
+  const sedbuk   = parseFloat(document.getElementById('sedbukInput').value);
+  const age      = parseFloat(document.getElementById('ageInput').value);
+  const flowTemp = document.getElementById('flowTempInput').value;
+  const scale    = document.getElementById('scaleInput').value;
+
+  document.getElementById('sedbukVal').textContent = sedbuk + '%';
+  document.getElementById('ageVal').textContent    = age + ' yr' + (age !== 1 ? 's' : '');
+
+  // age decay: ~0.4 % per year, floor at 80 % of rated
+  const ageFactor   = Math.max(0.80, 1 - age * 0.004);
+  const flowFactor  = flowTemp === 'condensing' ? 1.00 : flowTemp === 'partial' ? 0.95 : 0.88;
+  const scaleFactor = scale === 'none' ? 1.00 : scale === 'light' ? 0.97 : 0.93;
+
+  const real = sedbuk * ageFactor * flowFactor * scaleFactor;
+
+  const el   = document.getElementById('realEff');
+  el.textContent = real.toFixed(1) + '%';
+  el.className   = 'eff-value ' + (real >= 85 ? 'eff-good' : real >= 75 ? 'eff-warn' : 'eff-bad');
+
+  const notes = [];
+  if (ageFactor < 1)    notes.push('age penalty ×' + ageFactor.toFixed(3));
+  if (flowFactor < 1)   notes.push('flow-temp penalty ×' + flowFactor.toFixed(2));
+  if (scaleFactor < 1)  notes.push('scaling penalty ×' + scaleFactor.toFixed(2));
+  document.getElementById('effNote').textContent =
+    notes.length ? 'Adjustments: ' + notes.join(', ') : '';
+}
+
+['sedbukInput', 'ageInput', 'flowTempInput', 'scaleInput'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcRealEfficiency)
+);
+
+// ── Supply Pressure Monitor ────────────────────────────────────────────────
+function calcPressureDrop() {
+  const staticP  = parseFloat(document.getElementById('staticPressure').value);
+  const dynamicP = parseFloat(document.getElementById('dynamicPressure').value);
+  const el       = document.getElementById('pressureResult');
+
+  if (isNaN(staticP) || isNaN(dynamicP)) { el.innerHTML = ''; return; }
+
+  if (dynamicP > staticP) {
+    el.innerHTML = '<span class="pdrop-invalid">⚠ Dynamic exceeds static — check readings</span>';
+    return;
+  }
+
+  const drop = staticP - dynamicP;
+  let cls, label;
+  if      (drop < 0.20) { cls = 'pdrop-good'; label = 'Good supply'; }
+  else if (drop < 0.50) { cls = 'pdrop-ok';   label = 'Adequate'; }
+  else if (drop < 1.00) { cls = 'pdrop-warn'; label = 'Weak supply'; }
+  else                  { cls = 'pdrop-bad';  label = 'Very weak supply'; }
+
+  el.innerHTML =
+    `<div class="pdrop-line">` +
+    `<span class="pdrop-arrow">${staticP.toFixed(1)} &rarr; ${dynamicP.toFixed(1)} bar</span>` +
+    `<span class="pdrop-badge ${cls}">Drop: ${drop.toFixed(2)} bar &mdash; ${label}</span>` +
+    `</div>`;
+}
+
+['staticPressure', 'dynamicPressure'].forEach(id =>
+  document.getElementById(id).addEventListener('input', calcPressureDrop)
+);
+
 // More? modal
 const backdrop = document.getElementById('modalBackdrop');
 const focusableSelectors = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -557,6 +842,7 @@ document.addEventListener('keydown', e => {
 
 // Initial render
 render();
+calcRealEfficiency();
 </script>
 
 </body>
