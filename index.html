@@ -264,62 +264,6 @@
       margin-bottom: 14px;
     }
 
-    .cbb-inputs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .cbb-inputs .filter-group {
-      flex: 1;
-      min-width: 160px;
-    }
-
-    .range-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .range-row input[type="range"] {
-      flex: 1;
-      accent-color: #1a4a8a;
-      cursor: pointer;
-    }
-
-    .range-val {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #1a4a8a;
-      min-width: 38px;
-      text-align: right;
-    }
-
-    .efficiency-result {
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: #f0f4f8;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .eff-label { font-size: 0.9rem; color: #555; }
-
-    .eff-value { font-size: 1.4rem; font-weight: 700; }
-    .eff-good  { color: #047857; }
-    .eff-warn  { color: #b45309; }
-    .eff-bad   { color: #b91c1c; }
-
-    .eff-note {
-      font-size: 0.78rem;
-      color: #777;
-      flex-basis: 100%;
-      margin-top: 2px;
-    }
-
     /* ── Pressure Display ───────────────────────────── */
     .pressure-inputs {
       display: flex;
@@ -411,48 +355,6 @@
 </div>
 
 <main>
-
-  <!-- ── Current Boiler Efficiency Block ────────────── -->
-  <div class="current-boiler-block">
-    <p class="section-title">Current Boiler — Real Operating Efficiency</p>
-    <div class="cbb-inputs">
-      <div class="filter-group">
-        <label for="sedbukInput">SEDBUK Rating (%)</label>
-        <div class="range-row">
-          <input type="range" id="sedbukInput" min="70" max="96" value="84" step="1">
-          <span class="range-val" id="sedbukVal">84%</span>
-        </div>
-      </div>
-      <div class="filter-group">
-        <label for="ageInput">Boiler Age (years)</label>
-        <div class="range-row">
-          <input type="range" id="ageInput" min="0" max="20" value="10" step="1">
-          <span class="range-val" id="ageVal">10 yrs</span>
-        </div>
-      </div>
-      <div class="filter-group">
-        <label for="flowTempInput">Flow Temperature</label>
-        <select id="flowTempInput">
-          <option value="condensing">≤55 °C — fully condensing</option>
-          <option value="partial" selected>60–70 °C — partial condensing</option>
-          <option value="none">≥75 °C — not condensing</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label for="scaleInput">Scale / Magnetite</label>
-        <select id="scaleInput">
-          <option value="none">None</option>
-          <option value="light">Light</option>
-          <option value="heavy">Heavy</option>
-        </select>
-      </div>
-    </div>
-    <div class="efficiency-result">
-      <span class="eff-label">Estimated real operating efficiency:</span>
-      <span class="eff-value eff-warn" id="realEff">—</span>
-      <span class="eff-note" id="effNote"></span>
-    </div>
-  </div>
 
   <!-- ── Discount Finder Filters ───────────────────── -->
   <div class="filters">
@@ -754,39 +656,6 @@ document.getElementById('typeFilter').addEventListener('change', function () {
   }
 });
 
-// ── Current Boiler Efficiency Calculator ──────────────────────────────────
-function calcRealEfficiency() {
-  const sedbuk   = parseFloat(document.getElementById('sedbukInput').value);
-  const age      = parseFloat(document.getElementById('ageInput').value);
-  const flowTemp = document.getElementById('flowTempInput').value;
-  const scale    = document.getElementById('scaleInput').value;
-
-  document.getElementById('sedbukVal').textContent = sedbuk + '%';
-  document.getElementById('ageVal').textContent    = age + ' yr' + (age !== 1 ? 's' : '');
-
-  // age decay: 0.004 = 0.4% annual efficiency loss, floor at 80% of rated SEDBUK
-  const ageFactor   = Math.max(0.80, 1 - age * 0.004);
-  const flowFactor  = flowTemp === 'condensing' ? 1.00 : flowTemp === 'partial' ? 0.95 : 0.88;
-  const scaleFactor = scale === 'none' ? 1.00 : scale === 'light' ? 0.97 : 0.93;
-
-  const real = sedbuk * ageFactor * flowFactor * scaleFactor;
-
-  const el   = document.getElementById('realEff');
-  el.textContent = real.toFixed(1) + '%';
-  el.className   = 'eff-value ' + (real >= 85 ? 'eff-good' : real >= 75 ? 'eff-warn' : 'eff-bad');
-
-  const notes = [];
-  if (ageFactor < 1)    notes.push('age penalty ×' + ageFactor.toFixed(3));
-  if (flowFactor < 1)   notes.push('flow-temp penalty ×' + flowFactor.toFixed(2));
-  if (scaleFactor < 1)  notes.push('scaling penalty ×' + scaleFactor.toFixed(2));
-  document.getElementById('effNote').textContent =
-    notes.length ? 'Adjustments: ' + notes.join(', ') : '';
-}
-
-['sedbukInput', 'ageInput', 'flowTempInput', 'scaleInput'].forEach(id =>
-  document.getElementById(id).addEventListener('input', calcRealEfficiency)
-);
-
 // ── Supply Pressure Monitor ────────────────────────────────────────────────
 function calcPressureDrop() {
   const staticP  = parseFloat(document.getElementById('staticPressure').value);
@@ -842,7 +711,6 @@ document.addEventListener('keydown', e => {
 
 // Initial render
 render();
-calcRealEfficiency();
 </script>
 
 </body>
