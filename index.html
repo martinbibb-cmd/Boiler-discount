@@ -264,58 +264,6 @@
       margin-bottom: 14px;
     }
 
-    /* ── Pressure Display ───────────────────────────── */
-    .pressure-inputs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
-      align-items: flex-end;
-    }
-
-    .pressure-inputs .filter-group input[type="number"] {
-      padding: 9px 12px;
-      border: 1px solid #ccd6e0;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      background: #f9fbfd;
-      color: #222;
-      width: 100%;
-    }
-
-    .pressure-inputs .filter-group input[type="number"]:focus {
-      outline: 2px solid #1a4a8a;
-      outline-offset: 1px;
-    }
-
-    .pressure-result {
-      flex: 2;
-      min-width: 240px;
-      padding-bottom: 4px;
-    }
-
-    .pdrop-line {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .pdrop-arrow  { font-size: 0.95rem; font-weight: 600; color: #333; }
-
-    .pdrop-badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .pdrop-good    { background: #d1fae5; color: #065f46; }
-    .pdrop-ok      { background: #dbeafe; color: #1e40af; }
-    .pdrop-warn    { background: #fef3c7; color: #92400e; }
-    .pdrop-bad     { background: #fee2e2; color: #991b1b; }
-    .pdrop-invalid { font-size: 0.85rem; color: #991b1b; }
-
     /* ── Architecture info strip ────────────────────── */
     .arch-info {
       margin-top: 10px;
@@ -383,22 +331,6 @@
 
   <!-- ── Architecture Info Strip ───────────────────── -->
   <div class="arch-info" id="archInfo" style="display:none;margin-bottom:16px;"></div>
-
-  <!-- ── Pressure Monitor ──────────────────────────── -->
-  <div class="current-boiler-block" style="margin-bottom:24px;">
-    <p class="section-title">Supply Pressure Monitor</p>
-    <div class="pressure-inputs">
-      <div class="filter-group" style="max-width:180px;">
-        <label for="staticPressure">Static Pressure (bar)</label>
-        <input type="number" id="staticPressure" step="0.1" min="0" max="6" placeholder="e.g. 3.2">
-      </div>
-      <div class="filter-group" style="max-width:180px;">
-        <label for="dynamicPressure">Dynamic Pressure (bar)</label>
-        <input type="number" id="dynamicPressure" step="0.1" min="0" max="6" placeholder="e.g. 2.0">
-      </div>
-      <div class="pressure-result" id="pressureResult"></div>
-    </div>
-  </div>
 
   <p class="results-info" id="resultsInfo"></p>
 
@@ -655,37 +587,6 @@ document.getElementById('typeFilter').addEventListener('change', function () {
     archEl.style.display = 'none';
   }
 });
-
-// ── Supply Pressure Monitor ────────────────────────────────────────────────
-function calcPressureDrop() {
-  const staticP  = parseFloat(document.getElementById('staticPressure').value);
-  const dynamicP = parseFloat(document.getElementById('dynamicPressure').value);
-  const el       = document.getElementById('pressureResult');
-
-  if (isNaN(staticP) || isNaN(dynamicP)) { el.innerHTML = ''; return; }
-
-  if (dynamicP > staticP) {
-    el.innerHTML = '<span class="pdrop-invalid">⚠ Dynamic exceeds static — check readings</span>';
-    return;
-  }
-
-  const drop = staticP - dynamicP;
-  let cls, label;
-  if      (drop < 0.20) { cls = 'pdrop-good'; label = 'Good supply'; }
-  else if (drop < 0.50) { cls = 'pdrop-ok';   label = 'Adequate'; }
-  else if (drop < 1.00) { cls = 'pdrop-warn'; label = 'Weak supply'; }
-  else                  { cls = 'pdrop-bad';  label = 'Very weak supply'; }
-
-  el.innerHTML =
-    `<div class="pdrop-line">` +
-    `<span class="pdrop-arrow">${staticP.toFixed(1)} &rarr; ${dynamicP.toFixed(1)} bar</span>` +
-    `<span class="pdrop-badge ${cls}">Drop: ${drop.toFixed(2)} bar &mdash; ${label}</span>` +
-    `</div>`;
-}
-
-['staticPressure', 'dynamicPressure'].forEach(id =>
-  document.getElementById(id).addEventListener('input', calcPressureDrop)
-);
 
 // More? modal
 const backdrop = document.getElementById('modalBackdrop');
