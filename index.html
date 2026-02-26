@@ -53,6 +53,12 @@
       background: rgba(255,255,255,0.30);
     }
 
+    .header-buttons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
     /* Modal */
     .modal-backdrop {
       display: none;
@@ -286,7 +292,10 @@
     <h1>Boiler Discount Finder</h1>
     <p>Select a brand, boiler type and output (kW) to find available discounts.</p>
   </div>
-  <button class="more-btn" id="moreBtn">More?</button>
+  <div class="header-buttons">
+    <a class="more-btn" href="https://martinbibb-cmd.github.io/BG-grants/" target="_blank" rel="noopener noreferrer" aria-label="Grants (opens in new tab)">Grants</a>
+    <button class="more-btn" id="moreBtn">More?</button>
+  </div>
 </header>
 
 <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
