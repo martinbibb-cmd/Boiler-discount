@@ -565,6 +565,7 @@ function render() {
       <td class="code">${b.code || '<span style="color:#aaa">N/A</span>'}</td>
       <td>${formatPrice(b.price)}</td>
       <td class="discount">${formatDiscount(b.discount)}</td>
+      <td>${b.price !== null && b.price !== undefined && b.discount !== null && b.discount !== undefined ? formatPrice(b.price - b.discount) : '—'}</td>
     </tr>`).join('');
 
   container.innerHTML = `
@@ -576,6 +577,7 @@ function render() {
           <th>Code</th>
           <th>Price</th>
           <th>Discount</th>
+          <th>Current Price</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
