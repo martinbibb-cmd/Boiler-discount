@@ -351,8 +351,8 @@
 const BOILERS = [
   { brand: "Ariston", model: "Ariston Clas One 24", code: "CBLR3710", type: "Combi", power: 24, discount: 50, price: 816.25 },
   { brand: "Ariston", model: "Ariston Clas One 30", code: "CBLR3711", type: "Combi", power: 30, discount: 50, price: 889.72 },
-  { brand: "Ariston", model: "Ariston Clas One R 15", code: "CBLR3709", type: "Combi", power: 15, discount: 50, price: 750.00 },
-  { brand: "Ariston", model: "Ariston Clas One R 24", code: "CBLR3718", type: "Combi", power: 24, discount: 50, price: 896.11 },
+  { brand: "Ariston", model: "Ariston Clas One R 15", code: "CBLR3709", type: "Regular", power: 15, discount: 50, price: 750.00 },
+  { brand: "Ariston", model: "Ariston Clas One R 24", code: "CBLR3718", type: "Regular", power: 24, discount: 50, price: 896.11 },
   { brand: "Glowworm", model: "Glowworm Energy7 12r - Regular", code: "CBLR3375", type: "Regular", power: 12, discount: 50, price: 911.41 },
   { brand: "Glowworm", model: "Glowworm Energy7 15r - Regular", code: "CBLR3376", type: "Regular", power: 15, discount: 50, price: 955.43 },
   { brand: "Glowworm", model: "Glowworm Energy7 18r - Regular", code: "CBLR3377", type: "Regular", power: 18, discount: 50, price: 1042.30 },
@@ -453,6 +453,59 @@ const BOILERS = [
   { brand: "Worcester Bosch", model: "Worcester Greenstar 8000 Life 50kW Regular", code: "CBLR3542", type: "Regular", power: 50, discount: 300, price: 2669.00 },
 ];
 
+const PERFORMANCE_DATA = {
+  CBLR3710: { modMin: 3.7, modMax: 24.0, flowRate: "10.4 L/min" },
+  CBLR3711: { modMin: 4.3, modMax: 30.0, flowRate: "12.5 L/min" },
+  CBLR3382: { modMin: 5.0, modMax: 25.0, flowRate: "10.4 L/min" },
+  CBLR3383: { modMin: 6.0, modMax: 30.0, flowRate: "12.2 L/min" },
+  CBLR3384: { modMin: 7.0, modMax: 35.0, flowRate: "14.1 L/min" },
+  CBLR1912: { modMin: 4.8, modMax: 24.2, flowRate: "9.9 L/min" },
+  CBLR1913: { modMin: 6.1, modMax: 30.3, flowRate: "12.4 L/min" },
+  CBLR1914: { modMin: 7.1, modMax: 35.3, flowRate: "14.5 L/min" },
+  CBLR3420: { modMin: 5.1, modMax: 25.2, flowRate: "10.4 L/min" },
+  CBLR3421: { modMin: 6.1, modMax: 30.0, flowRate: "12.2 L/min" },
+  CBLR3422: { modMin: 7.1, modMax: 35.0, flowRate: "14.1 L/min" },
+  CBLR3439: { modMin: 6.7, modMax: 23.4, flowRate: "9.4 L/min" },
+  CBLR3440: { modMin: 9.0, modMax: 27.2, flowRate: "11.5 L/min" },
+  CBLR3463: { modMin: 3.5, modMax: 35.3, flowRate: "14.5 L/min" },
+  CBLR3464: { modMin: 4.3, modMax: 43.4, flowRate: "17.8 L/min" },
+  CBLR6510: { modMin: 3.0, modMax: 25.0, flowRate: "10.0 L/min" },
+  CBLR6511: { modMin: 3.3, modMax: 30.0, flowRate: "12.0 L/min" },
+  CBLR6512: { modMin: 3.5, modMax: 35.0, flowRate: "14.0 L/min" },
+  CBLR6516: { modMin: 3.0, modMax: 30.0, flowRate: "12.3 L/min" },
+  CBLR3600: { modMin: 3.0, modMax: 25.0, flowRate: "10.5 L/min" },
+  CBLR3602: { modMin: 3.0, modMax: 30.0, flowRate: "12.3 L/min" },
+  CBLR3530: { modMin: 4.0, modMax: 40.8, flowRate: "16.4 L/min" },
+  CBLR1390: { modMin: 7.3, modMax: 29.2, flowRate: "20.0 L/min*" },
+  CBLR3444: { modMin: 9.7, modMax: 41.1, flowRate: "25.0 L/min*" },
+  CBLR1918: { modMin: 6.1, modMax: 30.3, modRatio: "1:5" },
+  CBLR3429: { modMin: 4.4, modMax: 12.2, modRatio: "1:3" },
+  CBLR3430: { modMin: 4.4, modMax: 15.2, modRatio: "1:3.5" },
+  CBLR3431: { modMin: 5.5, modMax: 18.3, modRatio: "1:3.5" },
+  CBLR3432: { modMin: 6.3, modMax: 25.4, modRatio: "1:4" },
+  CBLR3433: { modMin: 7.3, modMax: 30.5, modRatio: "1:4" },
+  CBLR6514: { modMin: 3.0, modMax: 25.0, modRatio: "1:8" },
+  CBLR6524: { modMin: 3.2, modMax: 19.0, modRatio: "1:6" },
+  CBLR6526: { modMin: 5.4, modMax: 32.0, modRatio: "1:6" },
+  CBLR3604: { modMin: 3.0, modMax: 12.0, modRatio: "1:4" },
+  CBLR3606: { modMin: 3.0, modMax: 15.0, modRatio: "1:5" },
+  CBLR3608: { modMin: 3.0, modMax: 18.0, modRatio: "1:6" },
+  CBLR3610: { modMin: 3.0, modMax: 21.0, modRatio: "1:7" },
+  CBLR3612: { modMin: 3.0, modMax: 24.0, modRatio: "1:8" },
+  CBLR3549: { modMin: 3.5, modMax: 35.0, modRatio: "1:10" },
+  CBLR1919: { modMin: 4.8, modMax: 12.0, modRatio: "1:2.5" },
+  CBLR1923: { modMin: 6.1, modMax: 30.0, modRatio: "1:5" },
+  CBLR3423: { modMin: 4.5, modMax: 12.3, modRatio: "1:3" },
+  CBLR3428: { modMin: 7.4, modMax: 35.7, modRatio: "1:5" },
+  CBLR3390: { modMin: 3.9, modMax: 12.3, modRatio: "1:3" },
+  CBLR3394: { modMin: 6.4, modMax: 30.5, modRatio: "1:5" },
+  CBLR6519: { modMin: 3.2, modMax: 16.0, modRatio: "1:5" },
+  CBLR6522: { modMin: 5.4, modMax: 32.0, modRatio: "1:6" },
+  CBLR3453: { modMin: 3.2, modMax: 12.0, modRatio: "1:4" },
+  CBLR3461: { modMin: 5.0, modMax: 24.0, modRatio: "1:5" },
+  CBLR3542: { modMin: 5.0, modMax: 50.0, modRatio: "1:10" },
+};
+
 function formatDiscount(pounds) {
   return '£' + pounds.toFixed(2);
 }
@@ -460,6 +513,17 @@ function formatDiscount(pounds) {
 function formatPrice(amount) {
   if (amount === null || amount === undefined) return '—';
   return '£' + amount.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function formatModRange(performance) {
+  if (!performance) return '—';
+  return `${performance.modMin.toFixed(1)} – ${performance.modMax.toFixed(1)} kW`;
+}
+
+function getPerformanceValue(boiler, performance) {
+  if (!performance) return '—';
+  if (boiler.type === 'Combi') return performance.flowRate || '—';
+  return performance.modRatio || '—';
 }
 
 function getFilteredBoilers(brand, type, power) {
@@ -535,15 +599,20 @@ function render() {
 
   const typeClass = { Combi: 'type-combi', System: 'type-system', Regular: 'type-regular' };
 
-  const rows = results.map(b => `
+  const rows = results.map(b => {
+    const performance = PERFORMANCE_DATA[b.code];
+    return `
     <tr>
       <td>${b.model}</td>
       <td><span class="type-badge ${typeClass[b.type]}">${b.type}</span></td>
       <td class="code">${b.code || '<span style="color:#aaa">N/A</span>'}</td>
+      <td>${formatModRange(performance)}</td>
+      <td>${getPerformanceValue(b, performance)}</td>
       <td>${formatPrice(b.price)}</td>
       <td class="discount">${formatDiscount(b.discount)}</td>
       <td>${b.price !== null && b.price !== undefined && b.discount !== null && b.discount !== undefined ? formatPrice(b.price - b.discount) : '—'}</td>
-    </tr>`).join('');
+    </tr>`;
+  }).join('');
 
   container.innerHTML = `
     <table>
@@ -552,6 +621,8 @@ function render() {
           <th>Boiler Model</th>
           <th>Type</th>
           <th>Code</th>
+          <th>Mod. Range</th>
+          <th>Flow Rate / Mod. Ratio</th>
           <th>Price</th>
           <th>Discount</th>
           <th>Current Price</th>
