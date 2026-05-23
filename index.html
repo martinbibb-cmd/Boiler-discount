@@ -331,6 +331,14 @@
       </select>
     </div>
     <div class="filter-group">
+      <label for="fuelFilter">Fuel Type</label>
+      <select id="fuelFilter">
+        <option value="">All Fuels</option>
+        <option value="Natural Gas">Natural Gas</option>
+        <option value="LPG">LPG</option>
+      </select>
+    </div>
+    <div class="filter-group">
       <label for="powerFilter">Output (kW)</label>
       <select id="powerFilter">
         <option value="">All Outputs</option>
@@ -531,10 +539,15 @@ function getPerformanceValue(boiler, performance) {
   return performance.modRatio || '—';
 }
 
-function getFilteredBoilers(brand, type, power) {
+function getFuelType(model) {
+  return model.includes('LPG') ? 'LPG' : 'Natural Gas';
+}
+
+function getFilteredBoilers(brand, type, fuel, power) {
   return BOILERS.filter(b => {
     if (brand && b.brand !== brand) return false;
     if (type && b.type !== type) return false;
+    if (fuel && getFuelType(b.model) !== fuel) return false;
     if (power && b.power !== Number(power)) return false;
     return true;
   });
@@ -545,10 +558,11 @@ function getAvailableBrands() {
   return brands;
 }
 
-function getAvailablePowers(brand, type) {
+function getAvailablePowers(brand, type, fuel) {
   let filtered = BOILERS;
   if (brand) filtered = filtered.filter(b => b.brand === brand);
   if (type)  filtered = filtered.filter(b => b.type  === type);
+  if (fuel)  filtered = filtered.filter(b => getFuelType(b.model) === fuel);
   const powers = [...new Set(filtered.map(b => b.power))].sort((a, b) => a - b);
   return powers;
 }
@@ -556,6 +570,7 @@ function getAvailablePowers(brand, type) {
 function render() {
   const brand = document.getElementById('brandFilter').value;
   const type  = document.getElementById('typeFilter').value;
+  const fuel  = document.getElementById('fuelFilter').value;
   const power = document.getElementById('powerFilter').value;
 
   // Populate brand dropdown on first render
@@ -570,10 +585,10 @@ function render() {
     brandSelect.value = brand;
   }
 
-  // Update power options based on selected brand and type
+  // Update power options based on selected brand, type, and fuel
   const powerSelect = document.getElementById('powerFilter');
   const currentPower = powerSelect.value;
-  const availablePowers = getAvailablePowers(brand, type);
+  const availablePowers = getAvailablePowers(brand, type, fuel);
 
   powerSelect.innerHTML = '<option value="">All Outputs</option>';
   availablePowers.forEach(p => {
@@ -587,12 +602,13 @@ function render() {
   // Re-read power after options refresh
   const selectedPower = powerSelect.value;
 
-  const results = getFilteredBoilers(brand, type, selectedPower);
+  const results = getFilteredBoilers(brand, type, fuel, selectedPower);
 
   document.getElementById('resultsInfo').innerHTML =
     `Showing <strong>${results.length}</strong> boiler${results.length !== 1 ? 's' : ''}` +
     (brand ? ` &ndash; <strong>${brand}</strong>` : '') +
     (type  ? ` &ndash; <strong>${type}</strong>` : '') +
+    (fuel  ? ` &ndash; <strong>${fuel}</strong>` : '') +
     (selectedPower ? ` &ndash; <strong>${selectedPower} kW</strong>` : '');
 
   const container = document.getElementById('resultsContainer');
@@ -639,6 +655,7 @@ function render() {
 
 document.getElementById('brandFilter').addEventListener('change', render);
 document.getElementById('typeFilter').addEventListener('change', render);
+document.getElementById('fuelFilter').addEventListener('change', render);
 document.getElementById('powerFilter').addEventListener('change', render);
 
 // ── Architecture info strip ────────────────────────────────────────────────
