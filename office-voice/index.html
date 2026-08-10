@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>Office / Voice Boiler Discounts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: Arial, Helvetica, sans-serif; color: #222; background: #f0f4f8; }
+    header { padding: 20px 24px; color: #fff; background: #56327c; }
+    h1 { margin: 0; font-size: 1.6rem; }
+    header p { margin: 5px 0 0; opacity: .86; }
+    main { max-width: 960px; margin: 28px auto; padding: 0 16px 40px; }
+    .notice { margin-bottom: 20px; padding: 11px 14px; border-left: 4px solid #56327c; border-radius: 6px; color: #49375a; background: #f2eafa; }
+    .filters { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px #00000014; }
+    label { display: flex; flex-direction: column; gap: 6px; color: #555; font-size: .85rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    input, select { width: 100%; padding: 10px 12px; border: 1px solid #ccd6e0; border-radius: 6px; color: #222; background: #f9fbfd; font: inherit; }
+    input:focus, select:focus { outline: 2px solid #56327c; outline-offset: 1px; }
+    #resultsInfo { margin: 0 0 10px; color: #555; font-size: .9rem; }
+    #resultsInfo strong { color: #56327c; }
+    .table-wrap { overflow-x: auto; border-radius: 8px; box-shadow: 0 2px 8px #00000014; }
+    table { width: 100%; min-width: 580px; border-collapse: collapse; background: #fff; }
+    th { padding: 13px 16px; color: #fff; background: #56327c; font-size: .88rem; letter-spacing: .03em; text-align: left; text-transform: uppercase; }
+    td { padding: 12px 16px; border-bottom: 1px solid #e8ecf0; font-size: .93rem; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f8f3fc; }
+    .code { color: #555; font-family: monospace; }
+    .discount { color: #047857; font-weight: 700; }
+    .empty { padding: 36px 16px; color: #777; text-align: center; }
+    @media (max-width: 620px) { .filters { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Office / Voice Boiler Discounts</h1>
+    <p>Voice-channel offers from the Summer Sale list.</p>
+  </header>
+  <main>
+    <div class="notice" role="note">Internal Office / Voice view. This page is deliberately not linked from the normal channel.</div>
+    <div class="filters">
+      <label for="search">Search boiler or code
+        <input id="search" type="search" placeholder="e.g. Greenstar or CBLR3602" autocomplete="off">
+      </label>
+      <label for="discountFilter">Discount
+        <select id="discountFilter"><option value="">All discounts</option></select>
+      </label>
+    </div>
+    <p id="resultsInfo" aria-live="polite"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Boiler model</th><th>Code</th><th>Voice discount</th></tr></thead>
+        <tbody id="results"></tbody>
+      </table>
+    </div>
+  </main>
+  <script>
+    const VOICE_BOILERS = [
+      ["Ariston Clas One 24","CBLR3710",50],
+      ["Glowworm Energy7 25c ErP","CBLR3382",50],
+      ["Glowworm Energy7 35c ErP","CBLR3384",50],
+      ["Glowworm Energy7 30c ErP","CBLR3383",100],
+      ["Glowworm Energy7 15r - Regular","CBLR3376",300],
+      ["Glowworm Energy7 18r - Regular","CBLR3377",300],
+      ["Glowworm Energy7 25r - Regular","CBLR3378",300],
+      ["Glowworm Energy7 25s System ErP","CBLR3381",300],
+      ["Glowworm Energy7 30r - Regular","CBLR3379",300],
+      ["Greenstar 4000 30kW Combi LPG","CBLR3603",50],
+      ["Ideal Logic Combi Boiler 30kW","CBLR1901",50],
+      ["IDEAL LOGIC COMBI2 C24 BOILER","CBLR1912",50],
+      ["IDEAL LOGIC COMBI2 C30 BOILER","CBLR1913",50],
+      ["IDEAL LOGIC COMBI2 C35 BOILER","CBLR1914",50],
+      ["IDEAL LOGIC HEAT2 H12 BOILER","CBLR1919",50],
+      ["IDEAL LOGIC HEAT2 H18 BOILER","CBLR1921",50],
+      ["IDEAL LOGIC HEAT2 H24 BOILER","CBLR1922",50],
+      ["IDEAL LOGIC HEAT2 H15 BOILER","CBLR1920",100],
+      ["Vaillant ecoFIT pure 430 - Regular","CBLR3427",50],
+      ["Vaillant ecoFIT pure 615 - System","CBLR3430",50],
+      ["Vaillant ecoFIT pure 625 - System","CBLR3432",50],
+      ["Vaillant ecoFIT pure 825","CBLR3420",50],
+      ["Vaillant ecoFIT pure 830","CBLR3421",150],
+      ["Vaillant ecoFIT pure 415 - Regular","CBLR3424",300],
+      ["Vaillant ecoFIT pure 418 - Regular","CBLR3425",300],
+      ["Vaillant ecoFIT pure 425 - Regular","CBLR3426",300],
+      ["Vaillant ecoFIT pure 618 - System","CBLR3431",300],
+      ["Vaillant ecoFIT pure 630 - System","CBLR3433",300],
+      ["Vaillant ecoFIT pure 835","CBLR3422",300],
+      ["Vaillant ecoTEC plus 415 - Regular","CBLR3391",300],
+      ["Vaillant ecoTEC plus 418 - Regular","CBLR3392",300],
+      ["Vaillant ecoTEC plus 424 - Regular","CBLR3393",300],
+      ["Vaillant ecoTEC plus 430 - Regular","CBLR3394",300],
+      ["Viessmann Vitodens 050-W 25kw Combi B0KA","CBLR6510",50],
+      ["Viessmann Vitodens 050-W 25kW System Boiler B0HA","CBLR6514",50],
+      ["Worcester Greenstar 28CDi Compact","CBLR3459",50],
+      ["Worcester Greenstar 30Ri ErP - Regular","CBLR1380",50],
+      ["Worcester Greenstar 32CDi Compact ErP LPG","CBLR1370",50],
+      ["Worcester Greenstar 4000 18kW System NG","CBLR3608",50],
+      ["Worcester Greenstar 4000 24kW System NG","CBLR3612",50],
+      ["Worcester Greenstar 4000 25kW Combi LPG","CBLR3601",50],
+      ["Worcester Greenstar 8000 Style 35kW Combi (White and Chrome)","CBLR3501",50],
+      ["Worcester Greenstar 8000+ Style 32kW Combi NG","CBLR3565",50],
+      ["Worcester Greenstar Ri 24kW LPG - Regular","CBLR3462",50],
+      ["Worcester Greenstar 4000 15kW System NG","CBLR3606",100],
+      ["Worcester Greenstar 4000 25kW Combi NG","CBLR3600",150],
+      ["Worcester Greenstar Ri 15kW - Regular","CBLR3455",150],
+      ["Worcester Greenstar Ri 18kW - Regular","CBLR3457",150],
+      ["Worcester Greenstar Ri 24kW - Regular","CBLR3461",150],
+      ["Worcester Greenstar 4000 30kW Combi NG","CBLR3602",200],
+      ["Worcester Greenstar 4000 21kW System NG","CBLR3610",300]
+    ].map(([model, code, discount]) => ({ model, code, discount }));
+
+    const search = document.getElementById('search');
+    const discountFilter = document.getElementById('discountFilter');
+    const results = document.getElementById('results');
+    const resultsInfo = document.getElementById('resultsInfo');
+
+    [...new Set(VOICE_BOILERS.map(boiler => boiler.discount))].sort((a, b) => a - b).forEach(discount => {
+      const option = document.createElement('option');
+      option.value = discount;
+      option.textContent = `£${discount.toFixed(2)}`;
+      discountFilter.appendChild(option);
+    });
+
+    function appendCell(row, value, className) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      if (className) cell.className = className;
+      row.appendChild(cell);
+    }
+
+    function render() {
+      const query = search.value.trim().toLocaleLowerCase('en-GB');
+      const discount = discountFilter.value;
+      const filtered = VOICE_BOILERS.filter(boiler =>
+        (!query || `${boiler.model} ${boiler.code}`.toLocaleLowerCase('en-GB').includes(query)) &&
+        (!discount || boiler.discount === Number(discount))
+      );
+
+      results.replaceChildren();
+      resultsInfo.innerHTML = `Showing <strong>${filtered.length}</strong> Voice boiler${filtered.length === 1 ? '' : 's'}`;
+      if (!filtered.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.className = 'empty';
+        cell.textContent = 'No Voice boilers match those filters.';
+        row.appendChild(cell);
+        results.appendChild(row);
+        return;
+      }
+
+      filtered.forEach(boiler => {
+        const row = document.createElement('tr');
+        appendCell(row, boiler.model);
+        appendCell(row, boiler.code, 'code');
+        appendCell(row, `£${boiler.discount.toFixed(2)}`, 'discount');
+        results.appendChild(row);
+      });
+    }
+
+    search.addEventListener('input', render);
+    discountFilter.addEventListener('change', render);
+    render();
+  </script>
+</body>
+</html>
