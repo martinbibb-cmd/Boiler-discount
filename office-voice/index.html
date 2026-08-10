@@ -13,10 +13,10 @@
     header p { margin: 5px 0 0; opacity: .86; }
     main { max-width: 960px; margin: 28px auto; padding: 0 16px 40px; }
     .notice { margin-bottom: 20px; padding: 11px 14px; border-left: 4px solid #56327c; border-radius: 6px; color: #49375a; background: #f2eafa; }
-    .filters { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px #00000014; }
+    .filters { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px #00000014; }
     label { display: flex; flex-direction: column; gap: 6px; color: #555; font-size: .85rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    input, select { width: 100%; padding: 10px 12px; border: 1px solid #ccd6e0; border-radius: 6px; color: #222; background: #f9fbfd; font: inherit; }
-    input:focus, select:focus { outline: 2px solid #56327c; outline-offset: 1px; }
+    select { width: 100%; padding: 10px 12px; border: 1px solid #ccd6e0; border-radius: 6px; color: #222; background: #f9fbfd; font: inherit; }
+    select:focus { outline: 2px solid #56327c; outline-offset: 1px; }
     #resultsInfo { margin: 0 0 10px; color: #555; font-size: .9rem; }
     #resultsInfo strong { color: #56327c; }
     .table-wrap { overflow-x: auto; border-radius: 8px; box-shadow: 0 2px 8px #00000014; }
@@ -28,7 +28,8 @@
     .code { color: #555; font-family: monospace; }
     .discount { color: #047857; font-weight: 700; }
     .empty { padding: 36px 16px; color: #777; text-align: center; }
-    @media (max-width: 620px) { .filters { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) { .filters { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
+    @media (max-width: 460px) { .filters { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -39,11 +40,26 @@
   <main>
     <div class="notice" role="note">Internal Office / Voice view. This page is deliberately not linked from the normal channel.</div>
     <div class="filters">
-      <label for="search">Search boiler or code
-        <input id="search" type="search" placeholder="e.g. Greenstar or CBLR3602" autocomplete="off">
+      <label for="brandFilter">Brand
+        <select id="brandFilter"><option value="">All Brands</option></select>
       </label>
-      <label for="discountFilter">Discount
-        <select id="discountFilter"><option value="">All discounts</option></select>
+      <label for="typeFilter">System Type
+        <select id="typeFilter">
+          <option value="">All Types</option>
+          <option value="Combi">Combi — On-Demand DHW (Sealed)</option>
+          <option value="System">System — Stored Cylinder (Sealed)</option>
+          <option value="Regular">Regular — Open Vented + Cylinder</option>
+        </select>
+      </label>
+      <label for="fuelFilter">Fuel Type
+        <select id="fuelFilter">
+          <option value="">All Fuels</option>
+          <option value="Natural Gas">Natural Gas</option>
+          <option value="LPG">LPG</option>
+        </select>
+      </label>
+      <label for="powerFilter">Output (kW)
+        <select id="powerFilter"><option value="">All Outputs</option></select>
       </label>
     </div>
     <p id="resultsInfo" aria-live="polite"></p>
@@ -107,18 +123,61 @@
       ["Worcester Greenstar Ri 24kW - Regular","CBLR3461",150],
       ["Worcester Greenstar 4000 30kW Combi NG","CBLR3602",200],
       ["Worcester Greenstar 4000 21kW System NG","CBLR3610",300]
-    ].map(([model, code, discount]) => ({ model, code, discount }));
+    ].map(([model, code, discount]) => ({
+      model,
+      code,
+      discount,
+      brand: getBrand(model),
+      type: getSystemType(model),
+      fuel: model.toUpperCase().includes('LPG') ? 'LPG' : 'Natural Gas',
+      power: getOutput(model)
+    }));
 
-    const search = document.getElementById('search');
-    const discountFilter = document.getElementById('discountFilter');
+    const brandFilter = document.getElementById('brandFilter');
+    const typeFilter = document.getElementById('typeFilter');
+    const fuelFilter = document.getElementById('fuelFilter');
+    const powerFilter = document.getElementById('powerFilter');
     const results = document.getElementById('results');
     const resultsInfo = document.getElementById('resultsInfo');
 
-    [...new Set(VOICE_BOILERS.map(boiler => boiler.discount))].sort((a, b) => a - b).forEach(discount => {
+    function getBrand(model) {
+      if (model.startsWith('Ariston')) return 'Ariston';
+      if (model.startsWith('Glowworm')) return 'Glowworm';
+      if (model.toUpperCase().startsWith('IDEAL')) return 'Ideal';
+      if (model.startsWith('Vaillant')) return 'Vaillant';
+      if (model.startsWith('Viessmann')) return 'Viessmann';
+      return 'Worcester Bosch';
+    }
+
+    function getSystemType(model) {
+      if (/regular|heat(?:\s+only|2)|\bri\b/i.test(model)) return 'Regular';
+      if (/system|Energy7 \d+s\b/i.test(model)) return 'System';
+      return 'Combi';
+    }
+
+    function getOutput(model) {
+      const patterns = [
+        /(\d+)\s*kW/i,
+        /Clas One(?: R)?\s+(\d+)/i,
+        /Energy7\s+(\d+)[crs]\b/i,
+        /COMBI2\s+C(\d+)/i,
+        /HEAT2\s+H(\d+)/i,
+        /ecoFIT pure\s+[468](\d{2})\b/i,
+        /ecoTEC plus\s+4(\d{2})\b/i,
+        /Greenstar\s+(\d{2})(?:CDi|Ri)/i
+      ];
+      for (const pattern of patterns) {
+        const match = model.match(pattern);
+        if (match) return Number(match[1]);
+      }
+      return null;
+    }
+
+    [...new Set(VOICE_BOILERS.map(boiler => boiler.brand))].sort().forEach(brand => {
       const option = document.createElement('option');
-      option.value = discount;
-      option.textContent = `£${discount.toFixed(2)}`;
-      discountFilter.appendChild(option);
+      option.value = brand;
+      option.textContent = brand;
+      brandFilter.appendChild(option);
     });
 
     function appendCell(row, value, className) {
@@ -128,16 +187,36 @@
       row.appendChild(cell);
     }
 
+    function updatePowerOptions() {
+      const selected = powerFilter.value;
+      const powers = [...new Set(VOICE_BOILERS
+        .filter(boiler => !brandFilter.value || boiler.brand === brandFilter.value)
+        .filter(boiler => !typeFilter.value || boiler.type === typeFilter.value)
+        .filter(boiler => !fuelFilter.value || boiler.fuel === fuelFilter.value)
+        .map(boiler => boiler.power)
+        .filter(power => power !== null)
+      )].sort((a, b) => a - b);
+
+      powerFilter.replaceChildren(new Option('All Outputs', ''));
+      powers.forEach(power => powerFilter.add(new Option(`${power} kW`, power)));
+      if (powers.includes(Number(selected))) powerFilter.value = selected;
+    }
+
     function render() {
-      const query = search.value.trim().toLocaleLowerCase('en-GB');
-      const discount = discountFilter.value;
+      updatePowerOptions();
       const filtered = VOICE_BOILERS.filter(boiler =>
-        (!query || `${boiler.model} ${boiler.code}`.toLocaleLowerCase('en-GB').includes(query)) &&
-        (!discount || boiler.discount === Number(discount))
+        (!brandFilter.value || boiler.brand === brandFilter.value) &&
+        (!typeFilter.value || boiler.type === typeFilter.value) &&
+        (!fuelFilter.value || boiler.fuel === fuelFilter.value) &&
+        (!powerFilter.value || boiler.power === Number(powerFilter.value))
       );
 
       results.replaceChildren();
-      resultsInfo.innerHTML = `Showing <strong>${filtered.length}</strong> Voice boiler${filtered.length === 1 ? '' : 's'}`;
+      resultsInfo.innerHTML = `Showing <strong>${filtered.length}</strong> Voice boiler${filtered.length === 1 ? '' : 's'}` +
+        (brandFilter.value ? ` &ndash; <strong>${brandFilter.value}</strong>` : '') +
+        (typeFilter.value ? ` &ndash; <strong>${typeFilter.value}</strong>` : '') +
+        (fuelFilter.value ? ` &ndash; <strong>${fuelFilter.value}</strong>` : '') +
+        (powerFilter.value ? ` &ndash; <strong>${powerFilter.value} kW</strong>` : '');
       if (!filtered.length) {
         const row = document.createElement('tr');
         const cell = document.createElement('td');
@@ -158,8 +237,10 @@
       });
     }
 
-    search.addEventListener('input', render);
-    discountFilter.addEventListener('change', render);
+    brandFilter.addEventListener('change', render);
+    typeFilter.addEventListener('change', render);
+    fuelFilter.addEventListener('change', render);
+    powerFilter.addEventListener('change', render);
     render();
   </script>
 </body>
