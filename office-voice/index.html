@@ -72,7 +72,6 @@
   </main>
   <script>
     const VOICE_BOILERS = [
-      ["Ariston Clas One 24","CBLR3710",50],
       ["Glowworm Energy7 25c ErP","CBLR3382",50],
       ["Glowworm Energy7 35c ErP","CBLR3384",50],
       ["Glowworm Energy7 30c ErP","CBLR3383",100],
@@ -141,7 +140,6 @@
     const resultsInfo = document.getElementById('resultsInfo');
 
     function getBrand(model) {
-      if (model.startsWith('Ariston')) return 'Ariston';
       if (model.startsWith('Glowworm')) return 'Glowworm';
       if (model.toUpperCase().startsWith('IDEAL')) return 'Ideal';
       if (model.startsWith('Vaillant')) return 'Vaillant';
