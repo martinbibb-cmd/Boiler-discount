@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Boiler Discounts</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: Arial, Helvetica, sans-serif; color: #222; background: #f0f4f8; }
+    header { padding: 20px 24px; color: #fff; background: #1a4a8a; }
+    h1 { margin: 0; font-size: 1.6rem; }
+    header p { margin: 5px 0 0; opacity: .86; }
+    main { max-width: 960px; margin: 28px auto; padding: 0 16px 40px; }
+    .notice { margin-bottom: 20px; padding: 11px 14px; border-left: 4px solid #1a4a8a; border-radius: 6px; color: #1a4a8a; background: #eaf2fc; }
+    .filters { display: grid; grid-template-columns: repeat(4, minmax(150px, 1fr)); gap: 16px; margin-bottom: 24px; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px #00000014; }
+    label { display: flex; flex-direction: column; gap: 6px; color: #555; font-size: .85rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    select { width: 100%; padding: 10px 12px; border: 1px solid #ccd6e0; border-radius: 6px; color: #222; background: #f9fbfd; font: inherit; }
+    select:focus { outline: 2px solid #1a4a8a; outline-offset: 1px; }
+    #resultsInfo { margin: 0 0 10px; color: #555; font-size: .9rem; }
+    #resultsInfo strong { color: #1a4a8a; }
+    .table-wrap { overflow-x: auto; border-radius: 8px; box-shadow: 0 2px 8px #00000014; }
+    table { width: 100%; min-width: 580px; border-collapse: collapse; background: #fff; }
+    th { padding: 13px 16px; color: #fff; background: #1a4a8a; font-size: .88rem; letter-spacing: .03em; text-align: left; text-transform: uppercase; }
+    td { padding: 12px 16px; border-bottom: 1px solid #e8ecf0; font-size: .93rem; }
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: #f3f8fc; }
+    .code { color: #555; font-family: monospace; }
+    .discount { color: #047857; font-weight: 700; }
+    .empty { padding: 36px 16px; color: #777; text-align: center; }
+    @media (max-width: 760px) { .filters { grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
+    @media (max-width: 460px) { .filters { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Online Boiler Discounts</h1>
+    <p>Online-channel offers from the GRFW ’26 list.</p>
+  </header>
+  <main>
+    <div class="notice" role="note">Online-channel discounts. <a href="../">View Inhome discounts</a>.</div>
+    <div class="filters">
+      <label for="brandFilter">Brand
+        <select id="brandFilter"><option value="">All Brands</option></select>
+      </label>
+      <label for="typeFilter">System Type
+        <select id="typeFilter">
+          <option value="">All Types</option>
+          <option value="Combi">Combi — On-Demand DHW (Sealed)</option>
+          <option value="System">System — Stored Cylinder (Sealed)</option>
+          <option value="Regular">Regular — Open Vented + Cylinder</option>
+        </select>
+      </label>
+      <label for="fuelFilter">Fuel Type
+        <select id="fuelFilter">
+          <option value="">All Fuels</option>
+          <option value="Natural Gas">Natural Gas</option>
+          <option value="LPG">LPG</option>
+        </select>
+      </label>
+      <label for="powerFilter">Output (kW)
+        <select id="powerFilter"><option value="">All Outputs</option></select>
+      </label>
+    </div>
+    <p id="resultsInfo" aria-live="polite"></p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Boiler model</th><th>Code</th><th>Online discount</th></tr></thead>
+        <tbody id="results"></tbody>
+      </table>
+    </div>
+  </main>
+  <script>
+    // Source: GRFW '26 Boiler List.xlsx — Online Final DIscount List.
+    const ONLINE_BOILERS = [
+      ["Vaillant ecoFIT pure 625 - System","CBLR3432",300],
+      ["IDEAL LOGIC COMBI2 C35 BOILER","CBLR1914",300],
+      ["Vaillant ecoFIT pure 415 - Regular","CBLR3424",300],
+      ["Glowworm Energy7 18r - Regular","CBLR3377",300],
+      ["Worcester Greenstar 28CDi Compact","CBLR3459",300],
+      ["Glowworm Energy7 15r - Regular","CBLR3376",300],
+      ["Worcester Greenstar Ri 24kW - Regular","CBLR3461",300],
+      ["Worcester Greenstar 30Ri ErP - Regular","CBLR1380",300],
+      ["Vaillant ecoFIT pure 618 - System","CBLR3431",300],
+      ["Worcester Greenstar 4000 18kW System NG","CBLR3608",300],
+      ["Vaillant ecoTEC plus 418 - Regular","CBLR3392",300],
+      ["Vaillant ecoFIT pure 425 - Regular","CBLR3426",300],
+      ["Vaillant ecoFIT pure 418 - Regular","CBLR3425",300],
+      ["Ideal Logic Combi Boiler 30kW","CBLR1901",300],
+      ["Glowworm Energy7 12r - Regular","CBLR3375",300],
+      ["Vaillant ecoFIT pure 630 - System","CBLR3433",300],
+      ["Worcester Greenstar 4000 24kW System NG","CBLR3612",300],
+      ["Worcester Greenstar Ri 18kW - Regular","CBLR3457",300],
+      ["Vaillant ecoFIT pure 835","CBLR3422",300],
+      ["Vaillant ecoFIT pure 830","CBLR3421",300],
+      ["Worcester Greenstar 4000 30kW Combi NG","CBLR3602",300],
+      ["Worcester Greenstar Ri 15kW - Regular","CBLR3455",200],
+      ["Glowworm Energy7 30c ErP","CBLR3383",200],
+      ["IDEAL LOGIC COMBI2 C30 BOILER","CBLR1913",200],
+      ["Ariston Clas One R 24","CBLR3718",200],
+      ["Viessmann Vitodens 050-W 35kw Combi B0KA","CBLR6512",200],
+      ["Vaillant ecoFIT pure 825","CBLR3420",200],
+      ["Viessmann Vitodens 050-W 25kw Combi B0KA","CBLR6510",200],
+      ["Glowworm Energy7 25c ErP","CBLR3382",200],
+      ["IDEAL LOGIC HEAT2 H18 BOILER","CBLR1921",200],
+      ["Worcester Greenstar 4000 25kW Combi NG","CBLR3600",200],
+      ["Glowworm Energy7 18s System ErP","CBLR3380",150],
+      ["IDEAL LOGIC HEAT2 H15 BOILER","CBLR1920",150],
+      ["Worcester Greenstar 8000+ Style 36kW Combi NG","CBLR3566",150],
+      ["IDEAL LOGIC COMBI2 C24 BOILER","CBLR1912",150],
+      ["Viessmann Vitodens 100-W 19kW Heat Only B1GA","CBLR6520",100],
+      ["Ariston Clas One 24","CBLR3710",100],
+      ["Worcester Greenstar 2000 30kW Combi","CBLR2004",200],
+      ["Ariston Clas One 30","CBLR3711",100],
+      ["Worcester Greenstar 2000 25kW Combi","CBLR2003",200],
+      ["Worcester Greenstar 8000+ 36kW Combi NG","CBLR3561",100]
+    ].map(([model, code, discount]) => ({
+      model,
+      code,
+      discount,
+      brand: getBrand(model),
+      type: getSystemType(model),
+      fuel: model.toUpperCase().includes('LPG') ? 'LPG' : 'Natural Gas',
+      power: getOutput(model)
+    }));
+
+    const brandFilter = document.getElementById('brandFilter');
+    const typeFilter = document.getElementById('typeFilter');
+    const fuelFilter = document.getElementById('fuelFilter');
+    const powerFilter = document.getElementById('powerFilter');
+    const results = document.getElementById('results');
+    const resultsInfo = document.getElementById('resultsInfo');
+
+    function getBrand(model) {
+      if (model.startsWith('Ariston')) return 'Ariston';
+      if (model.startsWith('Glowworm')) return 'Glowworm';
+      if (model.toUpperCase().startsWith('IDEAL')) return 'Ideal';
+      if (model.startsWith('Vaillant')) return 'Vaillant';
+      if (model.startsWith('Viessmann')) return 'Viessmann';
+      return 'Worcester Bosch';
+    }
+
+    function getSystemType(model) {
+      if (/regular|heat(?:\s+only|2)|\bri\b|Clas One R\b/i.test(model)) return 'Regular';
+      if (/system|Energy7 \d+s\b/i.test(model)) return 'System';
+      return 'Combi';
+    }
+
+    function getOutput(model) {
+      const patterns = [
+        /(\d+)\s*kW/i,
+        /Clas One(?: R)?\s+(\d+)/i,
+        /Energy7\s+(\d+)[crs]\b/i,
+        /COMBI2\s+C(\d+)/i,
+        /HEAT2\s+H(\d+)/i,
+        /ecoFIT pure\s+[468](\d{2})\b/i,
+        /ecoTEC plus\s+[468](\d{2})\b/i,
+        /Greenstar\s+(\d{2})(?:CDi|Ri)/i
+      ];
+      for (const pattern of patterns) {
+        const match = model.match(pattern);
+        if (match) return Number(match[1]);
+      }
+      return null;
+    }
+
+    [...new Set(ONLINE_BOILERS.map(boiler => boiler.brand))].sort().forEach(brand => {
+      const option = document.createElement('option');
+      option.value = brand;
+      option.textContent = brand;
+      brandFilter.appendChild(option);
+    });
+
+    function appendCell(row, value, className) {
+      const cell = document.createElement('td');
+      cell.textContent = value;
+      if (className) cell.className = className;
+      row.appendChild(cell);
+    }
+
+    function updatePowerOptions() {
+      const selected = powerFilter.value;
+      const powers = [...new Set(ONLINE_BOILERS
+        .filter(boiler => !brandFilter.value || boiler.brand === brandFilter.value)
+        .filter(boiler => !typeFilter.value || boiler.type === typeFilter.value)
+        .filter(boiler => !fuelFilter.value || boiler.fuel === fuelFilter.value)
+        .map(boiler => boiler.power)
+        .filter(power => power !== null)
+      )].sort((a, b) => a - b);
+
+      powerFilter.replaceChildren(new Option('All Outputs', ''));
+      powers.forEach(power => powerFilter.add(new Option(`${power} kW`, power)));
+      if (powers.includes(Number(selected))) powerFilter.value = selected;
+    }
+
+    function render() {
+      updatePowerOptions();
+      const filtered = ONLINE_BOILERS.filter(boiler =>
+        (!brandFilter.value || boiler.brand === brandFilter.value) &&
+        (!typeFilter.value || boiler.type === typeFilter.value) &&
+        (!fuelFilter.value || boiler.fuel === fuelFilter.value) &&
+        (!powerFilter.value || boiler.power === Number(powerFilter.value))
+      );
+
+      results.replaceChildren();
+      resultsInfo.innerHTML = `Showing <strong>${filtered.length}</strong> Online boiler${filtered.length === 1 ? '' : 's'}` +
+        (brandFilter.value ? ` &ndash; <strong>${brandFilter.value}</strong>` : '') +
+        (typeFilter.value ? ` &ndash; <strong>${typeFilter.value}</strong>` : '') +
+        (fuelFilter.value ? ` &ndash; <strong>${fuelFilter.value}</strong>` : '') +
+        (powerFilter.value ? ` &ndash; <strong>${powerFilter.value} kW</strong>` : '');
+      if (!filtered.length) {
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.className = 'empty';
+        cell.textContent = 'No Online boilers match those filters.';
+        row.appendChild(cell);
+        results.appendChild(row);
+        return;
+      }
+
+      filtered.forEach(boiler => {
+        const row = document.createElement('tr');
+        appendCell(row, boiler.model);
+        appendCell(row, boiler.code, 'code');
+        appendCell(row, `£${boiler.discount.toFixed(2)}`, 'discount');
+        results.appendChild(row);
+      });
+    }
+
+    brandFilter.addEventListener('change', render);
+    typeFilter.addEventListener('change', render);
+    fuelFilter.addEventListener('change', render);
+    powerFilter.addEventListener('change', render);
+    render();
+  </script>
+</body>
+</html>
