@@ -15,11 +15,17 @@ GitHub Pages site, anyone who knows the endpoint can access it.
 
 Discounts are in pounds and follow `GRFW '26 Boiler List.xlsx`:
 
-- `/`: `Inhome Final DIscount List` (112 boilers).
-- `/office-voice/`: `Voice Final DIscount List` (61 boilers).
-- `/online/`: `Online Final DIscount List` (41 boilers).
+- `/`: `Inhome Final DIscount List` (108 boilers).
+- `/office-voice/`: `Voice Final DIscount List` (60 boilers).
+- `/online/`: `Online Final DIscount List` (38 boilers).
 
 Match records by trimmed CBLR code. Each page lists only the boilers on its
-channel's sheet. Existing Inhome boiler prices are retained; newly listed boilers
-have no price where the workbook supplies none. Online and Voice show the
-discount amounts without boiler prices.
+channel's sheet, excluding Ariston boilers as requested.
+
+## Prices
+
+All three pages use the `Part Price (inc VAT)` column from the British Gas UK
+Installations Manual Price Book (`068P200000uDkRQ.pdf`), matched by CBLR code.
+Prices after discount subtract that page's channel discount from the base price.
+The existing Inhome prices match the PDF. Codes `CBLR8011` through `CBLR8020`
+are absent from the PDF, so their base and after-discount prices display as `—`.

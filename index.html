@@ -357,12 +357,9 @@
 
 <script>
 // Source: GRFW '26 Boiler List.xlsx — Inhome Final DIscount List.
+// Prices: 068P200000uDkRQ.pdf, Part Price (inc VAT), matched by CBLR code.
 // Boiler data: { brand, model, code, type, power (kW), discount (£), price (£) }
 const BOILERS = [
-  { brand: "Ariston", model: "Ariston Clas One 24", code: "CBLR3710", type: "Combi", power: 24, discount: 100, price: 816.25 },
-  { brand: "Ariston", model: "Ariston Clas One 30", code: "CBLR3711", type: "Combi", power: 30, discount: 100, price: 889.72 },
-  { brand: "Ariston", model: "Ariston Clas One R 15", code: "CBLR3709", type: "Regular", power: 15, discount: 100, price: 750.00 },
-  { brand: "Ariston", model: "Ariston Clas One R 24", code: "CBLR3718", type: "Regular", power: 24, discount: 100, price: 896.11 },
   { brand: "Glowworm", model: "Glowworm Energy7 12r - Regular", code: "CBLR3375", type: "Regular", power: 12, discount: 100, price: 911.41 },
   { brand: "Glowworm", model: "Glowworm Energy7 15r - Regular", code: "CBLR3376", type: "Regular", power: 15, discount: 100, price: 955.43 },
   { brand: "Glowworm", model: "Glowworm Energy7 18r - Regular", code: "CBLR3377", type: "Regular", power: 18, discount: 100, price: 1042.30 },
@@ -474,9 +471,6 @@ const BOILERS = [
 ];
 
 const PERFORMANCE_DATA = {
-  CBLR3710: { modMin: 3.7, modMax: 24.0, flowRate: "10.4 L/min" },
-  CBLR3711: { modMin: 4.3, modMax: 30.0, flowRate: "12.5 L/min" },
-  CBLR3709: { modMin: 2.1, modMax: 15.0, modRatio: "1:7 (estimated)" },
   CBLR3382: { modMin: 5.0, modMax: 25.0, flowRate: "10.4 L/min" },
   CBLR3383: { modMin: 6.0, modMax: 30.0, flowRate: "12.2 L/min" },
   CBLR3384: { modMin: 7.0, modMax: 35.0, flowRate: "14.1 L/min" },
@@ -656,9 +650,9 @@ function render() {
           <th>Code</th>
           <th>Mod. Range</th>
           <th>Flow Rate / Mod. Ratio</th>
-          <th>Price</th>
+          <th>Price (inc VAT)</th>
           <th>Discount</th>
-          <th>Current Price</th>
+          <th>After Discount (inc VAT)</th>
         </tr>
       </thead>
       <tbody>${rows}</tbody>
