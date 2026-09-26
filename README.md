@@ -4,7 +4,7 @@ Tells you exactly what discounts on what boiler.
 ## Channel endpoints
 
 - `/` — normal/Inhome discount finder
-- `/online/` — Online discount finder, linked from the main page
+- `/online/` — standalone Online discount finder
 - `/office-voice/` — standalone Office/Voice list (deliberately not linked from the normal page)
 
 The Office/Voice endpoint includes a `noindex` directive and its data is kept out of
