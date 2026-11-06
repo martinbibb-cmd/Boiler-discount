@@ -34,7 +34,7 @@
 <body>
   <header>
     <h1>Online Boiler Discounts</h1>
-    <p>Online-channel offers from the GRFW ’26 list.</p>
+    <p>Online-channel offers from the Black Friday 2026 list.</p>
   </header>
   <main>
     <div class="notice" role="note">Online-channel discounts. <a href="../">View Inhome discounts</a>.</div>
@@ -70,47 +70,63 @@
     </div>
   </main>
   <script>
-    // Source: GRFW '26 Boiler List.xlsx — Online Final DIscount List.
+    // Source: Black Friday 2026 List for Delivery.xlsx — Online Final DIscount List.
     // Prices: 068P200000uDkRQ.pdf, Part Price (inc VAT), matched by CBLR code.
     const ONLINE_BOILERS = [
-      ["Vaillant ecoFIT pure 625 - System","CBLR3432",300,1399.0],
-      ["IDEAL LOGIC COMBI2 C35 BOILER","CBLR1914",300,1425.0],
-      ["Vaillant ecoFIT pure 415 - Regular","CBLR3424",300,1199.0],
-      ["Glowworm Energy7 18r - Regular","CBLR3377",300,1042.3],
-      ["Worcester Greenstar 28CDi Compact","CBLR3459",300,1339.0],
-      ["Glowworm Energy7 15r - Regular","CBLR3376",300,955.43],
-      ["Worcester Greenstar Ri 24kW - Regular","CBLR3461",300,1119.0],
-      ["Worcester Greenstar 30Ri ErP - Regular","CBLR1380",300,1225.0],
-      ["Vaillant ecoFIT pure 618 - System","CBLR3431",300,1299.0],
-      ["Worcester Greenstar 4000 18kW System NG","CBLR3608",300,1209.0],
-      ["Vaillant ecoTEC plus 418 - Regular","CBLR3392",300,1099.0],
-      ["Vaillant ecoFIT pure 425 - Regular","CBLR3426",300,1199.0],
-      ["Vaillant ecoFIT pure 418 - Regular","CBLR3425",300,1199.0],
-      ["Ideal Logic Combi Boiler 30kW","CBLR1901",300,1231.2],
       ["Glowworm Energy7 12r - Regular","CBLR3375",300,911.41],
-      ["Vaillant ecoFIT pure 630 - System","CBLR3433",300,1575.0],
-      ["Worcester Greenstar 4000 24kW System NG","CBLR3612",300,1399.0],
-      ["Worcester Greenstar Ri 18kW - Regular","CBLR3457",300,1049.0],
-      ["Vaillant ecoFIT pure 835","CBLR3422",300,1499.0],
-      ["Vaillant ecoFIT pure 830","CBLR3421",300,1335.0],
-      ["Worcester Greenstar 4000 30kW Combi NG","CBLR3602",300,1399.0],
-      ["Worcester Greenstar Ri 15kW - Regular","CBLR3455",200,1019.0],
-      ["Glowworm Energy7 30c ErP","CBLR3383",200,1140.94],
-      ["IDEAL LOGIC COMBI2 C30 BOILER","CBLR1913",200,1299.0],
-      ["Viessmann Vitodens 050-W 35kw Combi B0KA","CBLR6512",200,1299.0],
-      ["Vaillant ecoFIT pure 825","CBLR3420",200,1199.0],
-      ["Viessmann Vitodens 050-W 25kw Combi B0KA","CBLR6510",200,1169.0],
-      ["Glowworm Energy7 25c ErP","CBLR3382",200,1030.33],
-      ["IDEAL LOGIC HEAT2 H18 BOILER","CBLR1921",200,1025.0],
-      ["Worcester Greenstar 4000 25kW Combi NG","CBLR3600",200,1199.0],
+      ["Glowworm Energy7 15r - Regular","CBLR3376",300,955.43],
+      ["Glowworm Energy7 18r - Regular","CBLR3377",300,1042.3],
       ["Glowworm Energy7 18s System ErP","CBLR3380",150,1054.27],
-      ["IDEAL LOGIC HEAT2 H15 BOILER","CBLR1920",150,999.0],
-      ["Worcester Greenstar 8000+ Style 36kW Combi NG","CBLR3566",150,1949.0],
+      ["Glowworm Energy7 25c ErP","CBLR3382",200,1030.33],
+      ["Glowworm Energy7 30c ErP","CBLR3383",200,1140.94],
+      ["Ideal Logic Combi Boiler 30kW","CBLR1901",300,1231.2],
       ["IDEAL LOGIC COMBI2 C24 BOILER","CBLR1912",150,1239.0],
+      ["IDEAL LOGIC COMBI2 C30 BOILER","CBLR1913",200,1299.0],
+      ["IDEAL LOGIC COMBI2 C35 BOILER","CBLR1914",300,1425.0],
+      ["IDEAL LOGIC HEAT2 H15 BOILER","CBLR1920",150,999.0],
+      ["IDEAL LOGIC HEAT2 H18 BOILER","CBLR1921",200,1025.0],
+      ["Vaillant ecoFIT pure 415 - Regular","CBLR3424",300,1199.0],
+      ["Vaillant ecoFIT pure 418 - Regular","CBLR3425",300,1199.0],
+      ["Vaillant ecoFIT pure 425 - Regular","CBLR3426",300,1199.0],
+      ["Vaillant ecoFIT pure 618 - System","CBLR3431",300,1299.0],
+      ["Vaillant ecoFIT pure 625 - System","CBLR3432",300,1399.0],
+      ["Vaillant ecoFIT pure 630 - System","CBLR3433",300,1575.0],
+      ["Vaillant ecoFIT pure 825","CBLR3420",200,1199.0],
+      ["Vaillant ecoFIT pure 830","CBLR3421",300,1335.0],
+      ["Vaillant ecoFIT pure 835","CBLR3422",300,1499.0],
+      ["Vaillant ecoTEC plus 418 - Regular","CBLR3392",300,1099.0],
+      ["Viessmann Vitodens 050-W 25kw Combi B0KA","CBLR6510",200,1169.0],
+      ["Viessmann Vitodens 050-W 35kw Combi B0KA","CBLR6512",200,1299.0],
       ["Viessmann Vitodens 100-W 19kW Heat Only B1GA","CBLR6520",100,1249.0],
-      ["Worcester Greenstar 2000 30kW Combi","CBLR2004",200,1059.0],
       ["Worcester Greenstar 2000 25kW Combi","CBLR2003",200,899.0],
-      ["Worcester Greenstar 8000+ 36kW Combi NG","CBLR3561",100,1799.0]
+      ["Worcester Greenstar 2000 30kW Combi","CBLR2004",200,1059.0],
+      ["Worcester Greenstar 28CDi Compact","CBLR3459",300,1339.0],
+      ["Worcester Greenstar 30Ri ErP - Regular","CBLR1380",300,1225.0],
+      ["Worcester Greenstar 4000 18kW System NG","CBLR3608",300,1209.0],
+      ["Worcester Greenstar 4000 24kW System NG","CBLR3612",300,1399.0],
+      ["Worcester Greenstar 4000 25kW Combi NG","CBLR3600",200,1199.0],
+      ["Worcester Greenstar 4000 30kW Combi NG","CBLR3602",300,1399.0],
+      ["Worcester Greenstar 8000+ 36kW Combi NG","CBLR3561",100,1799.0],
+      ["Worcester Greenstar 8000+ Style 36kW Combi NG","CBLR3566",150,1949.0],
+      ["Worcester Greenstar Ri 15kW - Regular","CBLR3455",200,1019.0],
+      ["Worcester Greenstar Ri 18kW - Regular","CBLR3457",300,1049.0],
+      ["Worcester Greenstar Ri 24kW - Regular","CBLR3461",300,1119.0],
+      ["Vaillant ecoTEC plus 424 ErP","CBLR3373",200,1066.92],
+      ["Vaillant ecoTEC plus 412 - Regular","CBLR3390",200,929.0],
+      ["Vaillant ecoTEC plus 415 - Regular","CBLR3391",200,999.0],
+      ["Vaillant ecoTEC plus 424 - Regular","CBLR3393",200,1129.0],
+      ["Vaillant ecoTEC plus 430 - Regular","CBLR3394",200,1179.0],
+      ["Vaillant ecoTEC plus 435 - Regular","CBLR3395",200,1502.6],
+      ["Vaillant ecoTEC plus 826 Combi Boiler","CBLR8011",200,null],
+      ["Vaillant ecoTEC plus 832 Combi Boiler","CBLR8012",200,null],
+      ["Vaillant ecoTEC plus 836 Combi Boiler","CBLR8013",200,null],
+      ["Vaillant ecoTEC plus 840 Combi Boiler","CBLR8014",200,null],
+      ["Vaillant ecoTEC plus 610 System Boiler","CBLR8015",200,null],
+      ["Vaillant ecoTEC plus 615 System Boiler","CBLR8016",200,null],
+      ["Vaillant ecoTEC plus 620 System Boiler","CBLR8017",200,null],
+      ["Vaillant ecoTEC plus 625 System Boiler","CBLR8018",200,null],
+      ["Vaillant ecoTEC plus 630 System Boiler","CBLR8019",200,null],
+      ["Vaillant ecoTEC plus 635 System Boiler","CBLR8020",200,null]
     ].map(([model, code, discount, price]) => ({
       model,
       code,
@@ -138,7 +154,7 @@
     }
 
     function getSystemType(model) {
-      if (/regular|heat(?:\s+only|2)|\bri\b|Clas One R\b/i.test(model)) return 'Regular';
+      if (/ecoTEC plus 4\d{2}\b|regular|heat(?:\s+only|2)|\bri\b|Clas One R\b/i.test(model)) return 'Regular';
       if (/system|Energy7 \d+s\b/i.test(model)) return 'System';
       return 'Combi';
     }

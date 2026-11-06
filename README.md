@@ -13,11 +13,11 @@ GitHub Pages site, anyone who knows the endpoint can access it.
 
 ## Discount source
 
-Discounts are in pounds and follow `GRFW '26 Boiler List.xlsx`:
+Discounts are in pounds and follow `Black Friday 2026 List for Delivery.xlsx`:
 
-- `/`: `Inhome Final DIscount List` (108 boilers).
-- `/office-voice/`: `Voice Final DIscount List` (60 boilers).
-- `/online/`: `Online Final DIscount List` (38 boilers).
+- `/`: `Inhome Final DIscount List` (110 boilers, face-to-face).
+- `/office-voice/`: `Voice Final DIscount List` (63 boilers).
+- `/online/`: `Online Final DIscount List` (54 boilers).
 
 Match records by trimmed CBLR code. Each page lists only the boilers on its
 channel's sheet, excluding Ariston boilers as requested.
